@@ -3,3 +3,6 @@
 
 #include "Tower/Tower/USMagicTower.h"
 
+AUSMagicTower::AUSMagicTower() : Super(ETowerType::Magic)
+{
+}

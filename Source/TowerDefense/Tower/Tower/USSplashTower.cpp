@@ -3,3 +3,6 @@
 
 #include "Tower/Tower/USSplashTower.h"
 
+AUSSplashTower::AUSSplashTower() : Super(ETowerType::Splash)
+{
+}

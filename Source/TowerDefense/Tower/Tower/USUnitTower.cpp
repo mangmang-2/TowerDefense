@@ -2,4 +2,8 @@
 
 
 #include "Tower/Tower/USUnitTower.h"
+#include "../../Utility/DataTable/USTowerData.h"
 
+AUSUnitTower::AUSUnitTower() : Super(ETowerType::Unit)
+{
+}

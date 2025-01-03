@@ -14,4 +14,6 @@ class TOWERDEFENSE_API AUSUnitTower : public AUSTowerBase
 {
 	GENERATED_BODY()
 	
+public:
+	AUSUnitTower();
 };

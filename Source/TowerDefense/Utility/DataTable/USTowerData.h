@@ -28,13 +28,10 @@ struct FUSTowerData : public FTableRowBase
 public:
 	UPROPERTY(EditAnywhere)
 	ETowerType TowerType;
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UAnimMontage> AttckAnim;
 
-	//UPROPERTY(EditAnywhere)
-	//TArray<TSubclassOf<class UGameplayAbility>> Abilities;
-
-	//UPROPERTY(EditAnywhere)
-	//TObjectPtr<class UAnimMontage> AttckAnim;
-
-	//UPROPERTY(EditAnywhere)
-	//TObjectPtr<class USkeletalMesh> Mesh;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USkeletalMesh> Mesh;
 };

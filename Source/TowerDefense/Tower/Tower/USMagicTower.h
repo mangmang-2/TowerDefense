@@ -14,4 +14,6 @@ class TOWERDEFENSE_API AUSMagicTower : public AUSTowerBase
 {
 	GENERATED_BODY()
 	
+public:
+	AUSMagicTower();
 };

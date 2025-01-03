@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "../../Utility/DataTable/USTowerData.h"
 #include "USTowerBase.generated.h"
 
 UCLASS()
@@ -14,6 +15,7 @@ class TOWERDEFENSE_API AUSTowerBase : public APawn
 public:
 	// Sets default values for this pawn's properties
 	AUSTowerBase();
+	AUSTowerBase(ETowerType InTowerType);
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,6 +33,24 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UGameplayAbility> StartAbility;
+
 	UPROPERTY()
 	TObjectPtr<class UUSTowerStatAttributeSet> AttributeSet;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USkeletalMeshComponent> SkeletalMesh;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UCapsuleComponent> CapsuleComponent;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UAnimMontage> AttckAnim;
+
+	ETowerType TowerType;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UUSAttackerComponent> AttackerComponent;
+	
 };

@@ -23,6 +23,13 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+	void SetAbilitySystemComponent(class UAbilitySystemComponent* AbilitySystemComponent);
+	AActor* FindClosestMonster();
+	void ActivateAbility(AActor* Target);
 
+protected:
+	UPROPERTY()
+	TObjectPtr<class UAbilitySystemComponent> ASC;
 		
 };

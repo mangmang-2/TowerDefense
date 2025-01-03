@@ -14,4 +14,6 @@ class TOWERDEFENSE_API AUSSplashTower : public AUSTowerBase
 {
 	GENERATED_BODY()
 	
+public:
+	AUSSplashTower();
 };

@@ -13,5 +13,9 @@ UCLASS()
 class TOWERDEFENSE_API AUSArrowTower : public AUSTowerBase
 {
 	GENERATED_BODY()
+
+public:
+	AUSArrowTower();
 	
+	virtual void BeginPlay() override;
 };
