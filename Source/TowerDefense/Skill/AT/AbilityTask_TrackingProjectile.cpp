@@ -44,6 +44,10 @@ void UAbilityTask_TrackingProjectile::Activate()
 
     SpawnedBullet->SetHomingTarget(TargetActor);
     SpawnedBullet->SetVelocity(OwnerActor->GetActorForwardVector() * 1000);
+
+    SpawnedBullet->OnBulletHit.AddDynamic(this, &UAbilityTask_TrackingProjectile::OnBulletHit);
+    SpawnedBullet->OnBulletCancel.AddDynamic(this, &UAbilityTask_TrackingProjectile::OnBulletCancel);
+
 }
 
 void UAbilityTask_TrackingProjectile::OnDestroy(bool AbilityEnded)
@@ -54,5 +58,17 @@ void UAbilityTask_TrackingProjectile::OnDestroy(bool AbilityEnded)
 void UAbilityTask_TrackingProjectile::TickTask(float DeltaTime)
 {
     Super::TickTask(DeltaTime);
+}
 
+void UAbilityTask_TrackingProjectile::OnBulletHit()
+{
+    OnCompleted.Broadcast(TargetActor);
+    EndTask();
+}
+
+
+void UAbilityTask_TrackingProjectile::OnBulletCancel()
+{
+    OnInterrupted.Broadcast();
+    EndTask();
 }

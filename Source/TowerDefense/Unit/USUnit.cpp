@@ -6,6 +6,8 @@
 #include "../Tower/Stat/USTowerStatAttributeSet.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Components/CapsuleComponent.h"
+#include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 // Sets default values
 AUSUnit::AUSUnit()
@@ -32,7 +34,7 @@ AUSUnit::AUSUnit()
 void AUSUnit::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	RunBehaviorTree();
 }
 
 // Called every frame
@@ -47,5 +49,18 @@ void AUSUnit::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AUSUnit::RunBehaviorTree()
+{
+	if(BehaviorTree == nullptr)
+		return;
+
+	AAIController* AIController = Cast<AAIController>(GetController());
+	if (AIController == nullptr)
+		return;
+
+	if (AIController->RunBehaviorTree(BehaviorTree) == false)
+		return;
 }
 

@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "USBullet.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBulletHit);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBulletCancel);
+
 UCLASS()
 class TOWERDEFENSE_API AUSBullet : public AActor
 {
@@ -25,13 +28,22 @@ public:
 
 	void SetHomingTarget(const AActor* Target);
 	void SetVelocity(FVector Velocity);
+	void OnTargetHit();
+	void OnTargetCancel();
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UProjectileMovementComponent> ProjectileMovement;
-
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UNiagaraComponent> NiagaraEffect;
 
     UPROPERTY(EditAnywhere)
 	TObjectPtr<class UNiagaraSystem> NiagaraSystem;
+
+	FOnBulletHit OnBulletHit;
+
+	FOnBulletCancel OnBulletCancel;
+
+	UPROPERTY(EditAnywhere)
+	TWeakObjectPtr<const AActor> TargetActor = nullptr;
+	
 };

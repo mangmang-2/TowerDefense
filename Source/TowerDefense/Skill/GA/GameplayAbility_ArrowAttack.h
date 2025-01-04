@@ -20,11 +20,17 @@ public:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
 	UFUNCTION()
-	void OnCompleteCallback();
+	void OnCompleteCallback(const class AActor* Target);
+	
+	UFUNCTION()
+	void OnInterruptedCallback();
 
 	static UGameplayAbility_ArrowAttack* CreateTask(UGameplayAbility* OwningAbility);
 
 protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UGameplayEffect> AttackDamageEffect;
 };

@@ -6,8 +6,9 @@
 #include "Abilities/Tasks/AbilityTask.h"
 #include "AbilityTask_TrackingProjectile.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTrackingProjectileComplete);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTrackingProjectileComplete, const AActor*, Target);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTrackingProjectileInterrupted);
 /**
  * 
  */
@@ -26,9 +27,18 @@ public:
 	virtual void OnDestroy(bool AbilityEnded) override;
 
 	virtual void TickTask(float DeltaTime) override;
+	UFUNCTION()
+	void OnBulletHit();
 
+	UFUNCTION()
+	void OnBulletCancel();
+	
 	UPROPERTY(BlueprintAssignable)
 	FTrackingProjectileComplete	OnCompleted;
+
+	UPROPERTY(BlueprintAssignable)
+	FTrackingProjectileInterrupted	OnInterrupted;
+	
 
 protected:
 

@@ -16,7 +16,7 @@ UUSAttackerComponent::UUSAttackerComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	PrimaryComponentTick.TickInterval = 5.0f;
+	PrimaryComponentTick.TickInterval = 1.0f;
 }
 
 

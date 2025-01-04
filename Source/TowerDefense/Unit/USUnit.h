@@ -26,6 +26,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void RunBehaviorTree();
 protected:
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;
@@ -41,6 +42,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UAnimMontage> AttckAnim;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UBehaviorTree> BehaviorTree;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

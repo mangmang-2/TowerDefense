@@ -4,6 +4,8 @@
 #include "Skill/GA/GameplayAbility_ArrowAttack.h"
 #include "../AT/AbilityTask_TrackingProjectile.h"
 #include "Abilities/GameplayAbilityTypes.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 
 UGameplayAbility_ArrowAttack::UGameplayAbility_ArrowAttack()
 {
@@ -14,6 +16,8 @@ void UGameplayAbility_ArrowAttack::ActivateAbility(const FGameplayAbilitySpecHan
 {
 	UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, TriggerEventData->Target.Get(), ProjectileClass);
 	TrackingProjectileTask->OnCompleted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnCompleteCallback);
+	TrackingProjectileTask->OnInterrupted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnInterruptedCallback);
+	
 	TrackingProjectileTask->ReadyForActivation();
 }
 
@@ -22,7 +26,20 @@ void UGameplayAbility_ArrowAttack::EndAbility(const FGameplayAbilitySpecHandle H
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
-void UGameplayAbility_ArrowAttack::OnCompleteCallback()
+void UGameplayAbility_ArrowAttack::OnCompleteCallback(const class AActor* Target)
+{
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(const_cast<AActor*>(Target));
+
+	if (ASC && AttackDamageEffect)
+	{
+		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+		ASC->BP_ApplyGameplayEffectToSelf(AttackDamageEffect, 1, EffectContext);
+	}
+
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+void UGameplayAbility_ArrowAttack::OnInterruptedCallback()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
