@@ -23,4 +23,28 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+    void SpawnActors();
+
+
+protected:
+	FTimerHandle SpawnTimerHandle;
+	int32 CurrentSpawnCount = 0;
+
+	bool RepeatCount = false;
+
+	// 웨이포인트
+	FVector WayPoint;
+
+	UPROPERTY(EditAnywhere)
+	int32 MaxSpawnCount = 20;
+
+	UPROPERTY(EditAnywhere)
+	int32 BatchSpawnCount = 5;
+
+	UPROPERTY(EditAnywhere)
+	float SpawnInterval = 3.0f;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AUSUnit> SpawnUnitClass;
 };

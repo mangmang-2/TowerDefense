@@ -37,6 +37,12 @@ void AUSUnit::BeginPlay()
 	RunBehaviorTree();
 }
 
+void AUSUnit::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	RunBehaviorTree();
+}
+
 // Called every frame
 void AUSUnit::Tick(float DeltaTime)
 {
