@@ -47,6 +47,7 @@ void AUSPlayer::BeginPlay()
 
 		FInputModeGameAndUI InputMode;
 		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+		InputMode.SetHideCursorDuringCapture(false); // 마우스 클릭 시 커서 숨김 방지
 
 		PC->SetInputMode(InputMode);
 	}
