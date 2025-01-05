@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "USBullet.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBulletHit);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBulletHit, const AActor*, Target);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBulletCancel);
 
 UCLASS()
@@ -28,7 +28,7 @@ public:
 
 	void SetHomingTarget(const AActor* Target);
 	void SetVelocity(FVector Velocity);
-	void OnTargetHit();
+	void OnTargetHit(const AActor* Target);
 	void OnTargetCancel();
 
 	UPROPERTY(EditAnywhere)

@@ -26,15 +26,22 @@ public:
 	UFUNCTION()
     void SpawnActors();
 
+	void InitData(int32 MaxCount, int32 BatchCount, float Interval, bool Repeat, TSubclassOf<class AUSUnit> UnitClass, FVector InSpawnPoint);
 
+	void SetWaypoint(FVector InWayPoint);
+
+	UFUNCTION()
+    void DeathActors();
+
+	FVector FindNearestNavMeshLocation(const FVector& CurrentLocation);
 protected:
 	FTimerHandle SpawnTimerHandle;
-	int32 CurrentSpawnCount = 0;
-
 	bool RepeatCount = false;
 
 	// 웨이포인트
 	FVector WayPoint;
+
+	FVector SpawnPoint;
 
 	UPROPERTY(EditAnywhere)
 	int32 MaxSpawnCount = 20;
@@ -47,4 +54,6 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AUSUnit> SpawnUnitClass;
+
+	TArray<TObjectPtr<class AUSUnit>> SpawnList;
 };

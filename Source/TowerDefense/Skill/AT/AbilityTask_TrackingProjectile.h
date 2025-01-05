@@ -28,7 +28,7 @@ public:
 
 	virtual void TickTask(float DeltaTime) override;
 	UFUNCTION()
-	void OnBulletHit();
+	void OnBulletHit(const AActor* Target);
 
 	UFUNCTION()
 	void OnBulletCancel();

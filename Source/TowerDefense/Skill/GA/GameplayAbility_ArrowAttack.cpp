@@ -7,6 +7,9 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 
+#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+
+
 UGameplayAbility_ArrowAttack::UGameplayAbility_ArrowAttack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerExecution;
@@ -19,6 +22,9 @@ void UGameplayAbility_ArrowAttack::ActivateAbility(const FGameplayAbilitySpecHan
 	TrackingProjectileTask->OnInterrupted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnInterruptedCallback);
 	
 	TrackingProjectileTask->ReadyForActivation();
+
+	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), ActionMontage, 1.0);
+	PlayAttackTask->ReadyForActivation();
 }
 
 void UGameplayAbility_ArrowAttack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)

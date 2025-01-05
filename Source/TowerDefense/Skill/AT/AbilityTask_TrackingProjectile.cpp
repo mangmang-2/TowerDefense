@@ -60,9 +60,9 @@ void UAbilityTask_TrackingProjectile::TickTask(float DeltaTime)
     Super::TickTask(DeltaTime);
 }
 
-void UAbilityTask_TrackingProjectile::OnBulletHit()
+void UAbilityTask_TrackingProjectile::OnBulletHit(const AActor* Target)
 {
-    OnCompleted.Broadcast(TargetActor);
+    OnCompleted.Broadcast(Target);
     EndTask();
 }
 

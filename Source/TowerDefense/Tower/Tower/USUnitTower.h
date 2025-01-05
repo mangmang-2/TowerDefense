@@ -16,4 +16,16 @@ class TOWERDEFENSE_API AUSUnitTower : public AUSTowerBase
 	
 public:
 	AUSUnitTower();
+	
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+
+protected:
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class AUSUnitSpawner> UnitSpawner;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AUSUnit> SpawnUnitClass;
+
+	FVector Waypoint;
 };

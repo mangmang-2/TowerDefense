@@ -6,6 +6,9 @@
 #include "GameFramework/Pawn.h"
 #include "USUnit.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUnitDeath);
+
 UCLASS()
 class TOWERDEFENSE_API AUSUnit : public APawn
 {
@@ -28,6 +31,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void RunBehaviorTree();
+
+	UFUNCTION()
+	void RecordPath();
+	FVector GetRecordPostion(float Distance);
+
+	void SetWaypoint(FVector InWaypoint);
+	void UpdateWaypoint();
 protected:
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;
@@ -50,4 +60,15 @@ protected:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UFloatingPawnMovement> FloatingPawnMovement;
+
+protected:
+	FTimerHandle RecordPathTimerHandle;
+	TArray<FVector> PathHistory;
+	float RecordInterval = 0.2;
+	int32 MaxPathPoints = 100;
+
+	FVector TargetWaypoint;
+	bool IsReady = true;
+public:
+	FOnUnitDeath OnUnitDeath;
 };

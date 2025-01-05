@@ -54,12 +54,12 @@ void AUSBullet::Tick(float DeltaTime)
 
         if (Distance <= 10.0f)
         {
-            OnTargetHit();
+            OnTargetHit(TargetActor.Get());
         }
     }
     else
     {
-        OnTargetHit();
+        OnTargetHit(nullptr);
     }
 }
 
@@ -80,9 +80,9 @@ void AUSBullet::SetVelocity(FVector Velocity)
     ProjectileMovement->Velocity = Velocity;
 }
 
-void AUSBullet::OnTargetHit()
+void AUSBullet::OnTargetHit(const AActor* Target)
 {
-    OnBulletHit.Broadcast();
+    OnBulletHit.Broadcast(Target);
 
     Destroy();
 }

@@ -4,36 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "GameplayAbility_ArrowAttack.generated.h"
+#include "GameplayAbility_BackTeleport.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TOWERDEFENSE_API UGameplayAbility_ArrowAttack : public UGameplayAbility
+class TOWERDEFENSE_API UGameplayAbility_BackTeleport : public UGameplayAbility
 {
 	GENERATED_BODY()
-
+	
 public:
-	UGameplayAbility_ArrowAttack();
+	UGameplayAbility_BackTeleport();
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
-	
-	UFUNCTION()
-	void OnCompleteCallback(const class AActor* Target);
-	
-	UFUNCTION()
-	void OnInterruptedCallback();
+	FVector CalculateBacktrackLocation(AActor* Target, float Distance);
 
-	static UGameplayAbility_ArrowAttack* CreateTask(UGameplayAbility* OwningAbility);
+	float TeleportDistance = 500;       // 텔레포트할 거리
 
-protected:
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AActor> ProjectileClass;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UGameplayEffect> AttackDamageEffect;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UAnimMontage> ActionMontage;
+	TSubclassOf<class UGameplayEffect> CooldownEffect;
 };

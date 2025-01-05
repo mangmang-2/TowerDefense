@@ -54,6 +54,7 @@ AActor* UUSAttackerComponent::FindClosestMonster()
 	if(FoundActors.Num() == 0)
 		return nullptr;
 
+
 	// 일단 처음꺼.. 나중에 최우선적으로 떄려야할 우선순위 적어야함
 	return FoundActors[0];
 }
@@ -66,5 +67,6 @@ void UUSAttackerComponent::ActivateAbility(AActor* Target)
 	FGameplayEventData PayloadData;
 	PayloadData.Target = Target;
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), USTAG_TOWER_SKILL_ARROW, PayloadData);
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), USTAG_TOWER_SKILL_TELEPORT, PayloadData);
 }
 
