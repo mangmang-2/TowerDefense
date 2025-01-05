@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void BlueprintZoomFunc(float ActionValue);
 
+	UFUNCTION(BlueprintCallable)
+	void BPClickFunc();
+
 public:
 	void UpdateZoom();
 	void Dof();
@@ -43,7 +46,7 @@ public:
 	FVector2D CalculateEdgeMoveDistance();
 	FVector2D OffsetMousePositionToCreateDeadZone(FVector2D ScreenPos, FVector2D Distance);
 	FVector2D AdjustForNegativeDirection(FVector2D InputVector);
-
+	void FindActorsAtIntersection(FVector Intersection, float Radius);
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class USpringArmComponent> SpringArm;

@@ -82,6 +82,20 @@ void AUSPlayer::BlueprintZoomFunc(float ActionValue)
 	Dof();
 }
 
+void AUSPlayer::BPClickFunc()
+{
+	FVector2D ViewportCenter = GetViewportCenter();
+
+	FVector2D ScreenPos;
+	FVector Intersection;
+	bool bMousePostion;
+	ProjectMouseToGroundPlane(ScreenPos, Intersection, bMousePostion);
+	if (bMousePostion)
+	{
+		FindActorsAtIntersection(Intersection, 100.0f);
+	}
+}
+
 void AUSPlayer::UpdateZoom()
 {
 	ZoomValue = FMath::Clamp((ZoomDirection * 0.01) + ZoomValue, 0, 1);
@@ -237,4 +251,31 @@ FVector2D AUSPlayer::AdjustForNegativeDirection(FVector2D InputVector)
 	float AdjustedY = FMath::Sign(InputVector.Y);
 
 	return FVector2D(AdjustedX, AdjustedY);
+}
+
+void AUSPlayer::FindActorsAtIntersection(FVector Intersection, float Radius)
+{
+	TArray<FHitResult> HitResults;
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(Radius);
+
+	bool bHit = GetWorld()->SweepMultiByChannel(
+		HitResults,
+		Intersection,
+		Intersection,
+		FQuat::Identity,
+		ECC_GameTraceChannel1, // 충돌 채널
+		Sphere
+	);
+	DrawDebugSphere(GetWorld(), Intersection, Radius, 12, FColor::Green, false, 1.0f, 0, 2.0f);
+
+	if (bHit)
+	{
+		for (const FHitResult& Hit : HitResults)
+		{
+			if (AActor* HitActor = Hit.GetActor())
+			{
+				DrawDebugSphere(GetWorld(), HitActor->GetActorLocation(), Radius, 12, FColor::Red, false, 1.0f, 0, 2.0f);
+			}
+		}
+	}
 }

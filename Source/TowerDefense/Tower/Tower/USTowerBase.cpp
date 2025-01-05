@@ -17,13 +17,17 @@ AUSTowerBase::AUSTowerBase()
 	AttributeSet = CreateDefaultSubobject<UUSTowerStatAttributeSet>(TEXT("AttributeSet"));
 
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
-	RootComponent = CapsuleComponent;
+	CapsuleComponent->SetupAttachment(RootComponent);
 
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TowerMesh"));
 	SkeletalMesh->SetupAttachment(RootComponent);
 	//SkeletalMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
 	AttackerComponent = CreateDefaultSubobject<UUSAttackerComponent>(TEXT("AttackerComponent"));
+
+	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	CapsuleComponent->SetCollisionObjectType(ECC_GameTraceChannel1);
+	CapsuleComponent->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 }
 
 AUSTowerBase::AUSTowerBase(ETowerType InTowerType) : AUSTowerBase()
