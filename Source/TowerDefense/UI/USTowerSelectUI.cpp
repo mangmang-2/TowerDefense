@@ -21,11 +21,10 @@ void UUSTowerSelectUI::NativeConstruct()
 
 void UUSTowerSelectUI::SetData(TArray<FUSTowerUpgradeData> DataList)
 {
-
 	switch (DataList.Num())
 	{
 	case 1:
-		Insert(DataList[0], FVector2D(60,60));
+		Insert(DataList[0], FVector2D(80,20));
 		break;
 	case 2:
 		Insert(DataList[0], FVector2D(20, 20));

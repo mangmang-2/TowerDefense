@@ -28,8 +28,10 @@ public:
 	AActor* FindClosestMonster();
 	void ActivateAbility(AActor* Target);
 	void OwnerRotation(AActor* Target);
+
 protected:
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;
-		
+
+	
 };

@@ -61,8 +61,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AUSTowerBase> TowerBaseClass;
 
-	// 능력치 쓸지는..
-
 	UPROPERTY(EditAnywhere)
 	int32 AttackRange;
 };

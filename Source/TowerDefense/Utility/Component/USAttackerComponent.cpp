@@ -9,6 +9,8 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "../../Skill/Tag/USGameplayTag.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "GameplayAbilitySpec.h"
+#include "GameplayTagContainer.h"
 
 // Sets default values for this component's properties
 UUSAttackerComponent::UUSAttackerComponent()
@@ -41,7 +43,6 @@ void UUSAttackerComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 		return;
 
 	ActivateAbility(Target);
-	OwnerRotation(Target);
 }
 
 void UUSAttackerComponent::SetAbilitySystemComponent(UAbilitySystemComponent* AbilitySystemComponent)
@@ -71,8 +72,14 @@ void UUSAttackerComponent::ActivateAbility(AActor* Target)
 
 	FGameplayEventData PayloadData;
 	PayloadData.Target = Target;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), USTAG_TOWER_SKILL_ARROW, PayloadData);
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), USTAG_TOWER_SKILL_TELEPORT, PayloadData);
+	for (const auto& AbilitySpec : ASC->GetActivatableAbilities())
+	{
+		for (int32 TagsIndex = 0 ; TagsIndex < AbilitySpec.Ability->AbilityTags.Num(); TagsIndex++)
+		{
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), AbilitySpec.Ability->AbilityTags.GetByIndex(TagsIndex), PayloadData);
+			OwnerRotation(Target);
+		}
+	}
 }
 
 void UUSAttackerComponent::OwnerRotation(AActor* Target)
