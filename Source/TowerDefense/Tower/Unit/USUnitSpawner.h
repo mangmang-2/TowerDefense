@@ -55,5 +55,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AUSUnit> SpawnUnitClass;
 
+	UPROPERTY(EditAnywhere)
+	FName TagName;
+
 	TArray<TObjectPtr<class AUSUnit>> SpawnList;
 };

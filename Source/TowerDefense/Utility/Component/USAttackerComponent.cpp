@@ -8,6 +8,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "../../Skill/Tag/USGameplayTag.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values for this component's properties
 UUSAttackerComponent::UUSAttackerComponent()
@@ -36,7 +37,11 @@ void UUSAttackerComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	AActor* Target = FindClosestMonster();
+	if(Target == nullptr)
+		return;
+
 	ActivateAbility(Target);
+	OwnerRotation(Target);
 }
 
 void UUSAttackerComponent::SetAbilitySystemComponent(UAbilitySystemComponent* AbilitySystemComponent)
@@ -50,7 +55,7 @@ AActor* UUSAttackerComponent::FindClosestMonster()
 	TArray<AActor*> FilteredActors;
 
 	// 클래스에 해당하는 모든 액터 가져오기
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AUSUnit::StaticClass(), FoundActors);
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), AUSUnit::StaticClass(),TEXT("Monster"), FoundActors);
 	if(FoundActors.Num() == 0)
 		return nullptr;
 
@@ -68,5 +73,20 @@ void UUSAttackerComponent::ActivateAbility(AActor* Target)
 	PayloadData.Target = Target;
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), USTAG_TOWER_SKILL_ARROW, PayloadData);
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), USTAG_TOWER_SKILL_TELEPORT, PayloadData);
+}
+
+void UUSAttackerComponent::OwnerRotation(AActor* Target)
+{
+	if (Target && GetOwner())
+	{
+		AActor* Owner = GetOwner();
+
+		FVector OwnerLocation = Owner->GetActorLocation();
+		FVector TargetLocation = Target->GetActorLocation();
+
+		FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(OwnerLocation, TargetLocation);
+
+		Owner->SetActorRotation(LookAtRotation);
+	}
 }
 

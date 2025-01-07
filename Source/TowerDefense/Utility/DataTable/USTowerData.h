@@ -35,3 +35,34 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class USkeletalMesh> Mesh;
 };
+
+
+USTRUCT(BlueprintType)
+struct FUSTowerUpgradeData : public FTableRowBase
+{
+	GENERATED_BODY()
+	
+public:
+	UPROPERTY(EditAnywhere)
+	int32 TowerID = -1;
+
+	UPROPERTY(EditAnywhere)
+	ETowerType TowerType;
+
+	UPROPERTY(EditAnywhere)
+	int32 ParentID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UTexture2D> UIIcon;
+
+	UPROPERTY(EditAnywhere)
+	int32 UpgradeCost;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AUSTowerBase> TowerBaseClass;
+
+	// 능력치 쓸지는..
+
+	UPROPERTY(EditAnywhere)
+	int32 AttackRange;
+};

@@ -58,7 +58,8 @@ void AUSUnitSpawner::SpawnActors()
             SpawnedActor->OnUnitDeath.AddDynamic(this, &AUSUnitSpawner::DeathActors);
             FString AddressAsString = FString::Printf(TEXT("%p"), this);
             SpawnedActor->Tags.AddUnique(FName(AddressAsString));
-
+            SpawnedActor->Tags.AddUnique(FName(TagName));
+            
             SpawnList.Add(SpawnedActor);
             FVector Waypoint =  FindNearestNavMeshLocation(SpawnedActor->GetActorLocation());
             SpawnedActor->SetWaypoint(Waypoint);

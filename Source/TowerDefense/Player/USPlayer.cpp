@@ -8,7 +8,15 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
+#include "../UI/USTowerSelectUI.h"
+#include "../Utility/DataTable/USTowerUpgradeSubSystem.h"
+#include "../Tower/Interface/USTowerUpgradeInterface.h"
+#include "../Utility/MessageSystem/MesssageStruct/USTowerMessage.h"
+#include "NativeGameplayTags.h"
+#include "../Utility/MessageSystem/GameplayMessageSubsystem.h"
 
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_SelectUI_Message);
 
 // Sets default values
 AUSPlayer::AUSPlayer()
@@ -275,8 +283,49 @@ void AUSPlayer::FindActorsAtIntersection(FVector Intersection, float Radius)
 		{
 			if (AActor* HitActor = Hit.GetActor())
 			{
+				TowerSelectUI(HitActor);
 				DrawDebugSphere(GetWorld(), HitActor->GetActorLocation(), Radius, 12, FColor::Red, false, 1.0f, 0, 2.0f);
 			}
 		}
 	}
+	else
+	{
+		FUSTowerSelectUIMessage Message;
+		Message.Verb = TAG_SelectUI_Message;
+
+		UGameplayMessageSubsystem& MessageSystem = UGameplayMessageSubsystem::Get(GetWorld());
+		MessageSystem.BroadcastMessage(Message.Verb, Message);
+	}
+}
+
+void AUSPlayer::TowerSelectUI(AActor* SelectedActor)
+{
+	IUSTowerUpgradeInterface *TowerUpgrade = Cast<IUSTowerUpgradeInterface>(SelectedActor);
+	if(TowerUpgrade == nullptr)
+		return;
+
+	FVector WorldLocation = SelectedActor->GetActorLocation(); 
+	FVector2D ScreenPosition;
+
+	if (GetWorld()->GetFirstPlayerController()->ProjectWorldLocationToScreen(WorldLocation, ScreenPosition) == false)
+		return;
+
+	UUSTowerSelectUI* TowerSelect = CreateWidget<UUSTowerSelectUI>(GetWorld(), TowerSelectClass, TEXT("TowerConfirm"));
+	if (TowerSelect == nullptr)
+		return;
+
+	if (TowerSelect->IsInViewport())
+		return;
+
+	UUSTowerUpgradeSubSystem* TowerUpgradeSubSystem = GetGameInstance()->GetSubsystem<UUSTowerUpgradeSubSystem>();
+	if(TowerUpgradeSubSystem == nullptr)
+		return;
+
+	TArray<FUSTowerUpgradeData> UpgradeData = TowerUpgradeSubSystem->GetUpgradeDataListByParentID(TowerUpgrade->GetTowerID());
+	TowerSelect->SetActor(SelectedActor);
+	TowerSelect->SetData(UpgradeData);
+	
+	TowerSelect->AddToViewport();
+	TowerSelect->SetPositionInViewport(ScreenPosition);
+
 }

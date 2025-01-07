@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interface/USTowerUpgradeInterface.h"
 #include "USTowerSpawnPoint.generated.h"
 
 UCLASS()
-class TOWERDEFENSE_API AUSTowerSpawnPoint : public AActor
+class TOWERDEFENSE_API AUSTowerSpawnPoint : public AActor, public IUSTowerUpgradeInterface
 {
 	GENERATED_BODY()
 	
@@ -23,4 +24,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void ResponseMessage(struct FGameplayTag Channel, const struct FUSTowerBuildMessage& Payload);
+
+protected:
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UStaticMeshComponent> Mesh;
 };

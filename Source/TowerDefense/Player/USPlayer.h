@@ -47,6 +47,8 @@ public:
 	FVector2D OffsetMousePositionToCreateDeadZone(FVector2D ScreenPos, FVector2D Distance);
 	FVector2D AdjustForNegativeDirection(FVector2D InputVector);
 	void FindActorsAtIntersection(FVector Intersection, float Radius);
+	void TowerSelectUI(AActor* SelectedActor);
+
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class USpringArmComponent> SpringArm;
@@ -66,4 +68,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UInputMappingContext> BaseInputMappingContext;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUSTowerSelectUI> TowerSelectClass;
 };

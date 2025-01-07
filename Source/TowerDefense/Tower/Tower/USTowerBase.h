@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "../../Utility/DataTable/USTowerData.h"
+#include "../Interface/USTowerUpgradeInterface.h"
 #include "USTowerBase.generated.h"
 
 UCLASS()
-class TOWERDEFENSE_API AUSTowerBase : public APawn
+class TOWERDEFENSE_API AUSTowerBase : public APawn, public IUSTowerUpgradeInterface
 {
 	GENERATED_BODY()
 
@@ -27,7 +28,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 
 protected:
 	UPROPERTY()
@@ -52,5 +52,5 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UUSAttackerComponent> AttackerComponent;
-	
+
 };
