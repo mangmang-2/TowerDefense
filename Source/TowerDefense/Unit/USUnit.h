@@ -31,6 +31,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void RunBehaviorTree();
+	void IdleBehaviorTree();
 
 	UFUNCTION()
 	void RecordPath();
@@ -38,6 +39,8 @@ public:
 
 	void SetWaypoint(FVector InWaypoint);
 	void UpdateWaypoint();
+
+	void SetNiagara(TObjectPtr<class UNiagaraSystem> NiagaraSystem);
 protected:
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;
@@ -56,6 +59,13 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UBehaviorTree> BehaviorTree;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UBehaviorTree> IdleBehavior;
+
+	
+	UPROPERTY()
+	TObjectPtr<class UNiagaraComponent> NiagaraEffect;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

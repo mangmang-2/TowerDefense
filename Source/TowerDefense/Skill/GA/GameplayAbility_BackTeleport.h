@@ -20,9 +20,21 @@ public:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	FVector CalculateBacktrackLocation(AActor* Target, float Distance);
 
-	float TeleportDistance = 500;       // 텔레포트할 거리
+	void StopTarget();
 
+	UFUNCTION()
+	void Teleport();
+
+protected:
+	UPROPERTY(EditAnywhere)
+	float TeleportDistance = 500;       // 텔레포트할 거리
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UGameplayEffect> CooldownEffect;
+
+	UPROPERTY()
+	TWeakObjectPtr<const class AActor> TargetActor;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UNiagaraSystem> NiagaraSystem;
 };

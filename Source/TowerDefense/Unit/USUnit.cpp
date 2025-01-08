@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "NiagaraComponent.h"
 
 // Sets default values
 AUSUnit::AUSUnit()
@@ -28,6 +29,9 @@ AUSUnit::AUSUnit()
 
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 	FloatingPawnMovement->MaxSpeed = 300.0f;
+
+	NiagaraEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraEffect"));
+	NiagaraEffect->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -71,6 +75,19 @@ void AUSUnit::RunBehaviorTree()
 
 	if (AIController->RunBehaviorTree(BehaviorTree) == false)
 		return;
+}
+
+void AUSUnit::IdleBehaviorTree()
+{
+	if (IdleBehavior == nullptr)
+		return;
+
+	AAIController* AIController = Cast<AAIController>(GetController());
+	if (AIController == nullptr)
+		return;
+
+	if (AIController->RunBehaviorTree(IdleBehavior) == false)
+		return;	
 }
 
 void AUSUnit::RecordPath()
@@ -146,6 +163,19 @@ void AUSUnit::UpdateWaypoint()
 			IsReady = true;
 			FloatingPawnMovement->StopActiveMovement(); // 이동 중지
 		}
+	}
+}
+
+void AUSUnit::SetNiagara(TObjectPtr<class UNiagaraSystem> NiagaraSystem)
+{
+	if (NiagaraSystem)
+	{
+		NiagaraEffect->SetAsset(NiagaraSystem);
+		NiagaraEffect->Activate();
+	}
+	else
+	{
+		NiagaraEffect->Deactivate();
 	}
 }
 
