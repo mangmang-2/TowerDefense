@@ -16,6 +16,11 @@ class TOWERDEFENSE_API UUSTowerUpgradeSubSystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 	
 public:
+	void Initialize(FSubsystemCollectionBase& Collection);
 	TArray<FUSTowerUpgradeData> GetUpgradeDataListByParentID(int32 ParentID);
 	FUSTowerUpgradeData GetUpgradeData(int32 TowerID);
+
+	void SpawnTower(const struct FUSTowerBuildMessage& Payload);
+
+	void ResponseMessage(struct FGameplayTag Channel, const struct FUSTowerBuildMessage& Payload);
 };

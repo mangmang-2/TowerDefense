@@ -2,14 +2,9 @@
 
 
 #include "Tower/USTowerSpawnPoint.h"
-#include "NativeGameplayTags.h"
-#include "../Utility/MessageSystem/GameplayMessageSubsystem.h"
-#include "../Utility/MessageSystem/MesssageStruct/USTowerMessage.h"
-#include "../Utility/DataTable/USTowerUpgradeSubSystem.h"
-#include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "Tower/USTowerBase.h"
 
-UE_DEFINE_GAMEPLAY_TAG(TAG_TowerBuild_Message, "Message.Tower.Build");
+
+
 
 // Sets default values
 AUSTowerSpawnPoint::AUSTowerSpawnPoint()
@@ -25,8 +20,7 @@ void AUSTowerSpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(GetWorld());
-	MessageSubsystem.RegisterListener(TAG_TowerBuild_Message, this, &ThisClass::ResponseMessage);
+
 }
 
 // Called every frame
@@ -34,37 +28,5 @@ void AUSTowerSpawnPoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-void AUSTowerSpawnPoint::ResponseMessage(FGameplayTag Channel, const FUSTowerBuildMessage& Payload)
-{
-	if(Payload.OwnerActor != this)
-		return;
-
-	UUSTowerUpgradeSubSystem* TowerUpgradeSubSystem = GetGameInstance()->GetSubsystem<UUSTowerUpgradeSubSystem>();
-	if (TowerUpgradeSubSystem == nullptr)
-		return;
-
-	FUSTowerUpgradeData UpgradeData = TowerUpgradeSubSystem->GetUpgradeData(Payload.TowerID);
-	if(UpgradeData.TowerID == -1)
-		return;
-
-	FVector ActorLocation = GetActorLocation();
-	ActorLocation.Z = 94;
-	AUSTowerBase* TowerActor = Cast<AUSTowerBase>(UAIBlueprintHelperLibrary::SpawnAIFromClass(
-		GetWorld(),
-		UpgradeData.TowerBaseClass,
-		nullptr,
-		ActorLocation,
-		FRotator::ZeroRotator,
-		true
-	));
-	if (TowerActor)
-	{
-		TowerActor->SetTowerID(Payload.TowerID);
-		TowerActor->InitTower(UpgradeData);
-	}
-
-	Destroy();
 }
 

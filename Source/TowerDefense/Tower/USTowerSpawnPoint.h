@@ -24,8 +24,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void ResponseMessage(struct FGameplayTag Channel, const struct FUSTowerBuildMessage& Payload);
-
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UStaticMeshComponent> Mesh;
