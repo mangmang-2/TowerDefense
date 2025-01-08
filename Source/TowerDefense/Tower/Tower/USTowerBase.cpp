@@ -6,6 +6,7 @@
 #include "../Stat/USTowerStatAttributeSet.h"
 #include "../../Utility/Component/USAttackerComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "../../Utility/Component/USTowerRangeComponent.h"
 
 // Sets default values
 AUSTowerBase::AUSTowerBase()
@@ -20,16 +21,16 @@ AUSTowerBase::AUSTowerBase()
 
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 	CapsuleComponent->SetupAttachment(RootComponent);
-
-	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TowerMesh"));
-	SkeletalMesh->SetupAttachment(RootComponent);
-	//SkeletalMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
-
-	AttackerComponent = CreateDefaultSubobject<UUSAttackerComponent>(TEXT("AttackerComponent"));
-
 	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	CapsuleComponent->SetCollisionObjectType(ECC_GameTraceChannel1);
 	CapsuleComponent->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
+
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TowerMesh"));
+	SkeletalMesh->SetupAttachment(RootComponent);
+
+	AttackerComponent = CreateDefaultSubobject<UUSAttackerComponent>(TEXT("AttackerComponent"));
+
+	TowerRangeComponent = CreateDefaultSubobject<UUSTowerRangeComponent>(TEXT("TowerRangeComponent"));
 }
 
 AUSTowerBase::AUSTowerBase(ETowerType InTowerType) : AUSTowerBase()
@@ -69,17 +70,11 @@ void AUSTowerBase::BeginPlay()
 	AttckAnim = TowerData->AttckAnim;
 }
 
-// Called every frame
-void AUSTowerBase::Tick(float DeltaTime)
+void AUSTowerBase::InitTower(FUSTowerUpgradeData UpgradeData)
 {
-	Super::Tick(DeltaTime);
-
+	TowerRangeComponent->SetRange(UpgradeData.AttackRange);
+	AttackerComponent->SetRange(UpgradeData.AttackRange);
 }
 
-// Called to bind functionality to input
-void AUSTowerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-}
 

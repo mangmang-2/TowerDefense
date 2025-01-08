@@ -4,35 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "USAttackerComponent.generated.h"
+#include "USTowerRangeComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TOWERDEFENSE_API UUSAttackerComponent : public UActorComponent
+class TOWERDEFENSE_API UUSTowerRangeComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UUSAttackerComponent();
+	UUSTowerRangeComponent();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
-	void SetAbilitySystemComponent(class UAbilitySystemComponent* AbilitySystemComponent);
-	AActor* FindClosestMonster();
-	void ActivateAbility(AActor* Target);
-	void OwnerRotation(AActor* Target);
-	void SetRange(float Range);
 
+public:
+	void SetRange(float Range);
+		
 protected:
-	UPROPERTY()
-	TObjectPtr<class UAbilitySystemComponent> ASC;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UStaticMeshComponent> RangeMesh;
 
 	float AttackRange;
 };

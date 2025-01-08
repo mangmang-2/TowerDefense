@@ -30,6 +30,7 @@ public:
 	void SetVelocity(FVector Velocity);
 	void OnTargetHit(const AActor* Target);
 	void OnTargetCancel();
+	void SetSpeed(float InitialSpeed, float HomingAccelerationMagnitude);
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UProjectileMovementComponent> ProjectileMovement;

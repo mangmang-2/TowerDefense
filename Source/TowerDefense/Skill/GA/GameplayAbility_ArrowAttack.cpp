@@ -17,7 +17,7 @@ UGameplayAbility_ArrowAttack::UGameplayAbility_ArrowAttack()
 
 void UGameplayAbility_ArrowAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, TriggerEventData->Target.Get(), ProjectileClass);
+	UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, TriggerEventData->Target.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
 	TrackingProjectileTask->OnCompleted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnCompleteCallback);
 	TrackingProjectileTask->OnInterrupted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnInterruptedCallback);
 	

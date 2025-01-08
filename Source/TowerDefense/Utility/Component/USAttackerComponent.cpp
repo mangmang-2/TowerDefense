@@ -20,6 +20,7 @@ UUSAttackerComponent::UUSAttackerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	PrimaryComponentTick.TickInterval = 1.0f;
+
 }
 
 
@@ -53,16 +54,23 @@ void UUSAttackerComponent::SetAbilitySystemComponent(UAbilitySystemComponent* Ab
 AActor* UUSAttackerComponent::FindClosestMonster()
 {
 	TArray<AActor*> FoundActors;
-	TArray<AActor*> FilteredActors;
 
 	// 클래스에 해당하는 모든 액터 가져오기
 	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), AUSUnit::StaticClass(),TEXT("Monster"), FoundActors);
 	if(FoundActors.Num() == 0)
 		return nullptr;
 
+	FVector OwnerActorLocation = GetOwner()->GetActorLocation();
+	for (const auto& Actor : FoundActors)
+	{
+		FVector ActorLocation = Actor->GetActorLocation();
+		if ((OwnerActorLocation - ActorLocation).Length() < AttackRange)
+		{
+			return Actor;
+		}
+	}
 
-	// 일단 처음꺼.. 나중에 최우선적으로 떄려야할 우선순위 적어야함
-	return FoundActors[0];
+	return nullptr;
 }
 
 void UUSAttackerComponent::ActivateAbility(AActor* Target)
@@ -95,5 +103,10 @@ void UUSAttackerComponent::OwnerRotation(AActor* Target)
 
 		Owner->SetActorRotation(LookAtRotation);
 	}
+}
+
+void UUSAttackerComponent::SetRange(float Range)
+{
+	AttackRange = Range;
 }
 

@@ -59,9 +59,12 @@ void AUSTowerSpawnPoint::ResponseMessage(FGameplayTag Channel, const FUSTowerBui
 		FRotator::ZeroRotator,
 		true
 	));
-	TowerActor->SetTowerID(Payload.TowerID);
+	if (TowerActor)
+	{
+		TowerActor->SetTowerID(Payload.TowerID);
+		TowerActor->InitTower(UpgradeData);
+	}
 
-	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+	Destroy();
 }
 

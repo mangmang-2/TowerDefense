@@ -111,7 +111,12 @@ FVector AUSUnit::GetRecordPostion(float Distance)
 	if(FoundPosition == CurrentLocation)
 		return GetActorLocation();
 
-	PathHistory.RemoveAt(PathHistory.Find(FoundPosition));
+	int32 FoundIndex = PathHistory.Find(FoundPosition);
+	if (FoundIndex != INDEX_NONE)
+	{
+		PathHistory.RemoveAt(FoundIndex, PathHistory.Num() - FoundIndex);
+	}
+
 	return FoundPosition;
 }
 

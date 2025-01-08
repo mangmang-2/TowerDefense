@@ -4,26 +4,37 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "GameplayAbility_ArrowAttack.generated.h"
+#include "GameplayAbility_TripleAttack.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TOWERDEFENSE_API UGameplayAbility_ArrowAttack : public UGameplayAbility
+class TOWERDEFENSE_API UGameplayAbility_TripleAttack : public UGameplayAbility
 {
 	GENERATED_BODY()
 
 public:
-	UGameplayAbility_ArrowAttack();
+	UGameplayAbility_TripleAttack();
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
 	UFUNCTION()
 	void OnCompleteCallback(const class AActor* Target);
+
+	UFUNCTION()
+	void OnLastCompleteCallback(const class AActor* Target);
 	
 	UFUNCTION()
 	void OnInterruptedCallback();
+
+	void LaunchProjectile(bool bLastAttack);
+	UFUNCTION()
+	void LaunchFirstProjectileTask();
+	UFUNCTION()
+	void LaunchSecondProjectileTask();
+	UFUNCTION()
+	void LaunchThirdProjectileTask();
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -40,4 +51,14 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float HomingAccelerationMagnitude = 2000.0f;
+
+	UPROPERTY(EditAnywhere)
+	float FireInterval = 1.0f;
+
+	UPROPERTY()
+	TWeakObjectPtr<const class AActor> TargetActor;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UGameplayEffect> CooldownEffect;
+	
 };

@@ -20,7 +20,7 @@ class TOWERDEFENSE_API UAbilityTask_TrackingProjectile : public UAbilityTask
 
 public:
 	UAbilityTask_TrackingProjectile();
-	static UAbilityTask_TrackingProjectile* CreateTask(UGameplayAbility* OwningAbility, const class AActor* Target, TSubclassOf<AActor> InProjectileClass);
+	static UAbilityTask_TrackingProjectile* CreateTask(UGameplayAbility* OwningAbility, const class AActor* Target, TSubclassOf<AActor> InProjectileClass, float InitialSpeed, float HomingAccelerationMagnitude);
 
 
 	virtual void Activate() override;
@@ -46,5 +46,8 @@ protected:
 	TWeakObjectPtr<AActor> OwnerActor;
 	FVector ActorLocation;
 	FRotator ActorRotation;
+
+	float InitialSpeed;
+	float HomingAccelerationMagnitude;
 	
 };

@@ -10,11 +10,14 @@ UAbilityTask_TrackingProjectile::UAbilityTask_TrackingProjectile()
     bTickingTask = true;
 }
 
-UAbilityTask_TrackingProjectile* UAbilityTask_TrackingProjectile::CreateTask(UGameplayAbility* OwningAbility, const class AActor* Target, TSubclassOf<AActor> InProjectileClass)
+UAbilityTask_TrackingProjectile* UAbilityTask_TrackingProjectile::CreateTask(UGameplayAbility* OwningAbility, const class AActor* Target, TSubclassOf<AActor> InProjectileClass, float InitialSpeed, float HomingAccelerationMagnitude)
 {
     UAbilityTask_TrackingProjectile* MyObj = NewAbilityTask<UAbilityTask_TrackingProjectile>(OwningAbility);
     MyObj->OwnerActor = OwningAbility->GetActorInfo().AvatarActor;
     MyObj->TargetActor = Target;
+    MyObj->InitialSpeed = InitialSpeed;
+    MyObj->HomingAccelerationMagnitude = HomingAccelerationMagnitude;
+
     return MyObj;
 }
 
@@ -44,6 +47,7 @@ void UAbilityTask_TrackingProjectile::Activate()
 
     SpawnedBullet->SetHomingTarget(TargetActor);
     SpawnedBullet->SetVelocity(OwnerActor->GetActorForwardVector() * 1000);
+    SpawnedBullet->SetSpeed(InitialSpeed, HomingAccelerationMagnitude);
 
     SpawnedBullet->OnBulletHit.AddDynamic(this, &UAbilityTask_TrackingProjectile::OnBulletHit);
     SpawnedBullet->OnBulletCancel.AddDynamic(this, &UAbilityTask_TrackingProjectile::OnBulletCancel);

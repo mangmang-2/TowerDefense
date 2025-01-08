@@ -17,14 +17,13 @@ AUSBullet::AUSBullet()
 
     ProjectileMovement->bRotationFollowsVelocity = true; // 투사체 이동 방향에 따라 회전
     ProjectileMovement->ProjectileGravityScale = 0.0f; // 중력 영향을 끄기
-    ProjectileMovement->InitialSpeed = 500.0f; // 초기 속도
-    ProjectileMovement->MaxSpeed = 500.0f; // 최대 속도
 
     ProjectileMovement->bIsHomingProjectile = true;
-    ProjectileMovement->HomingAccelerationMagnitude = 2000.0f; // 유도 속도 설정
 
     NiagaraEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraEffect"));
     NiagaraEffect->SetupAttachment(RootComponent);
+
+    SetSpeed(500.0f, 2000.0f);
 
 }
 
@@ -52,7 +51,7 @@ void AUSBullet::Tick(float DeltaTime)
 
         float Distance = FVector::Dist(CurrentLocation, TargetLocation);
 
-        if (Distance <= 10.0f)
+        if (Distance <= 50.0f)
         {
             OnTargetHit(TargetActor.Get());
         }
@@ -92,4 +91,11 @@ void AUSBullet::OnTargetCancel()
     OnBulletCancel.Broadcast();
 
     Destroy();
+}
+
+void AUSBullet::SetSpeed(float InitialSpeed, float HomingAccelerationMagnitude)
+{
+    ProjectileMovement->InitialSpeed = InitialSpeed;
+    ProjectileMovement->MaxSpeed = InitialSpeed;
+    ProjectileMovement->HomingAccelerationMagnitude = HomingAccelerationMagnitude;
 }
