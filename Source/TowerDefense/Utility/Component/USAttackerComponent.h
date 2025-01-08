@@ -34,5 +34,5 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
-	float AttackRange;
+	float AttackRange = 10000;
 };

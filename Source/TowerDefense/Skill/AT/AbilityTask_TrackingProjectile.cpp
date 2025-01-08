@@ -17,7 +17,8 @@ UAbilityTask_TrackingProjectile* UAbilityTask_TrackingProjectile::CreateTask(UGa
     MyObj->TargetActor = Target;
     MyObj->InitialSpeed = InitialSpeed;
     MyObj->HomingAccelerationMagnitude = HomingAccelerationMagnitude;
-
+    MyObj->ProjectileClass = InProjectileClass;
+    
     return MyObj;
 }
 
@@ -32,14 +33,8 @@ void UAbilityTask_TrackingProjectile::Activate()
     ActorLocation = OwnerActor->GetActorLocation() + OwnerActor->GetActorUpVector() * 50 + OwnerActor->GetActorForwardVector() * 50;
     ActorRotation = OwnerActor->GetActorRotation();
 
-    UClass* BulletClass = StaticLoadClass(
-        AActor::StaticClass(),
-        nullptr,
-        TEXT("/Game/TowerDefance/Skill/BP_Bullet.BP_Bullet_C")
-    );
-    // ÃÑ¾Ë ½ºÆù
     AUSBullet* SpawnedBullet = GetWorld()->SpawnActor<AUSBullet>(
-        BulletClass,
+        ProjectileClass,
         ActorLocation,
         ActorRotation,
         SpawnParams

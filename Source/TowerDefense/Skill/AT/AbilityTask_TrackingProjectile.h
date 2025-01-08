@@ -41,6 +41,7 @@ public:
 	
 
 protected:
+	TSubclassOf<AActor> ProjectileClass;
 
 	const class AActor* TargetActor;
 	TWeakObjectPtr<AActor> OwnerActor;
