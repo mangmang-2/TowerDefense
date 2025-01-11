@@ -38,16 +38,13 @@ public:
 	void MoveTracking();
 	
 	void EdgeMode();
-	FVector2D GetViewportCenter();
-	FVector2D GetMouseViewportPosition(bool& bMousePostion);
-	FVector ProjectScreenPositionToGamePlane(FVector2D ScreenPosition);
-	void ProjectMouseToGroundPlane(FVector2D& ScreenPosition, FVector& Intersection, bool& bMousePostion);
 	FVector CursorDistFromViewportCenter(FVector2D ScreenPos);
 	FVector2D CalculateEdgeMoveDistance();
 	FVector2D OffsetMousePositionToCreateDeadZone(FVector2D ScreenPos, FVector2D Distance);
 	FVector2D AdjustForNegativeDirection(FVector2D InputVector);
 	void FindActorsAtIntersection(FVector Intersection, float Radius);
 	void TowerSelectUI(AActor* SelectedActor);
+	void ResponseMessage(struct FGameplayTag Channel, const struct FUSTowerWaypointUIMessage& Payload);
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -71,4 +68,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUSTowerSelectUI> TowerSelectClass;
+
+	class AUSWaypointCursor* WaypointCursor = nullptr;
+
 };

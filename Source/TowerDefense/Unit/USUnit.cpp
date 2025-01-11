@@ -10,6 +10,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "NiagaraComponent.h"
 
+
 // Sets default values
 AUSUnit::AUSUnit()
 {
@@ -42,6 +43,7 @@ void AUSUnit::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(RecordPathTimerHandle, this, &AUSUnit::RecordPath, RecordInterval, true);
 
 	TargetWaypoint = GetActorLocation();
+
 }
 
 void AUSUnit::PossessedBy(AController* NewController)
@@ -178,4 +180,5 @@ void AUSUnit::SetNiagara(TObjectPtr<class UNiagaraSystem> NiagaraSystem)
 		NiagaraEffect->Deactivate();
 	}
 }
+
 

@@ -8,8 +8,11 @@
 #include "NativeGameplayTags.h"
 #include "../Utility/MessageSystem/GameplayMessageSubsystem.h"
 #include "../Utility/MessageSystem/MesssageStruct/USTowerMessage.h"
+#include "../Tower/Tower/USUnitTower.h"
+#include "Components/Button.h"
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_SelectUI_Message, "Message.UI.SelectUI");
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_UnitWaypointMode_Message);
 
 void UUSTowerSelectUI::NativeConstruct()
 {
@@ -38,7 +41,7 @@ void UUSTowerSelectUI::SetData(TArray<FUSTowerUpgradeData> DataList)
 		break;
 	default:
 		break;
-	}
+	}	
 }
 
 void UUSTowerSelectUI::Insert(FUSTowerUpgradeData UpgradeData, FVector2D Pos)
@@ -61,6 +64,12 @@ void UUSTowerSelectUI::Insert(FUSTowerUpgradeData UpgradeData, FVector2D Pos)
 void UUSTowerSelectUI::SetActor(AActor* SelectedActor)
 {
 	OwnerActor = SelectedActor;
+
+	Button_WayPoint->SetVisibility(ESlateVisibility::Hidden);
+	if (SelectedActor && SelectedActor->IsA<AUSUnitTower>())
+	{
+		Button_WayPoint->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void UUSTowerSelectUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -81,5 +90,17 @@ void UUSTowerSelectUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 
 void UUSTowerSelectUI::ResponseMessage(FGameplayTag Channel, const FUSTowerSelectUIMessage& Payload)
 {
+	RemoveFromParent();
+}
+
+void UUSTowerSelectUI::BPClickWaypoint()
+{
+	FUSTowerWaypointUIMessage Message;
+	Message.Verb = TAG_UnitWaypointMode_Message;
+	Message.AddressAsString = FString::Printf(TEXT("%p"), OwnerActor);
+	
+	UGameplayMessageSubsystem& MessageSystem = UGameplayMessageSubsystem::Get(GetWorld());
+	MessageSystem.BroadcastMessage(Message.Verb, Message);
+
 	RemoveFromParent();
 }

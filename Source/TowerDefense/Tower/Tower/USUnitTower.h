@@ -6,6 +6,7 @@
 #include "Tower/Tower/USTowerBase.h"
 #include "USUnitTower.generated.h"
 
+
 /**
  * 
  */
@@ -20,12 +21,25 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-protected:
+public:
+	UFUNCTION()
+	void SpawnUnit(class AUSUnit* Unit);
+
+	FVector FindNearestNavMeshLocation(const FVector& CurrentLocation);
+	TArray<FVector> GetFormationPosition(const FVector& InWayPoint, float Width, float Height);
+
+	void ResponseMessage(struct FGameplayTag Channel, const struct FUSTowerWaypointUIMessage& Payload);
+public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class AUSUnitSpawner> UnitSpawner;
 
+protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AUSUnit> SpawnUnitClass;
 
 	FVector Waypoint;
+	TArray<FVector> UnitFormation;
+	float UnitFormationLength = 70;
+
+	TArray<TObjectPtr<class AUSUnit>> Units;
 };

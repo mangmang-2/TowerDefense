@@ -35,6 +35,21 @@ struct FUSTowerSelectUIMessage
     FGameplayTag Verb;
 
     UPROPERTY(BlueprintReadWrite)
-    int32 Message
- ;
+    int32 Message;
+};
+
+
+USTRUCT(BlueprintType)
+struct FUSTowerWaypointUIMessage
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FGameplayTag Verb;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString AddressAsString;
+
+    UPROPERTY(BlueprintReadWrite)
+    FVector Waypoint;
 };

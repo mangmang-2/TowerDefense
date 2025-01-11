@@ -61,3 +61,8 @@ void UUSTowerRangeComponent::SetRange(float Range)
 	}
 }
 
+float UUSTowerRangeComponent::GetAttackRange()
+{
+	return AttackRange;
+}
+

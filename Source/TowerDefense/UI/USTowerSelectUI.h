@@ -24,8 +24,11 @@ public:
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-
 	void ResponseMessage(struct FGameplayTag Channel, const struct FUSTowerSelectUIMessage& Payload);
+
+	UFUNCTION(BlueprintCallable)
+	void BPClickWaypoint();
+
 protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUSCostItem> CostItemClass;
@@ -34,4 +37,7 @@ protected:
 	TObjectPtr<class UCanvasPanel> CanvasPanel_Item;
 
 	AActor* OwnerActor = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UButton> Button_WayPoint;
 };

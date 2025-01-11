@@ -23,6 +23,7 @@ protected:
 
 public:
 	void SetRange(float Range);
+	float GetAttackRange();
 		
 protected:
 	UPROPERTY(EditAnywhere)

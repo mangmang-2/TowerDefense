@@ -12,11 +12,16 @@
 #include "../UI/USTowerSelectUI.h"
 #include "../Utility/DataTable/USTowerUpgradeSubSystem.h"
 #include "../Tower/Interface/USTowerUpgradeInterface.h"
+#include "USTowerPlayerController.h"
+#include "../Tower/Interface/USTowerUpgradeInterface.h"
+#include "../UI/USTowerSelectUI.h"
 #include "../Utility/MessageSystem/MesssageStruct/USTowerMessage.h"
 #include "NativeGameplayTags.h"
 #include "../Utility/MessageSystem/GameplayMessageSubsystem.h"
+#include "../Utility/UnitCursor/USWaypointCursor.h"
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_SelectUI_Message);
+UE_DEFINE_GAMEPLAY_TAG(TAG_UnitWaypointMode_Message, "Message.Player.UnitWaypointMode");
 
 // Sets default values
 AUSPlayer::AUSPlayer()
@@ -59,6 +64,9 @@ void AUSPlayer::BeginPlay()
 
 		PC->SetInputMode(InputMode);
 	}
+
+	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(GetWorld());
+	MessageSubsystem.RegisterListener(TAG_UnitWaypointMode_Message, this, &ThisClass::ResponseMessage);
 }
 
 // Called every frame
@@ -93,15 +101,28 @@ void AUSPlayer::BlueprintZoomFunc(float ActionValue)
 
 void AUSPlayer::BPClickFunc()
 {
-	FVector2D ViewportCenter = GetViewportCenter();
+	AUSTowerPlayerController* PlayerController = CastChecked<AUSTowerPlayerController>(GetController());
+	if (PlayerController == nullptr)
+		return;
+	FVector2D ViewportCenter = PlayerController->GetViewportCenter();
 
 	FVector2D ScreenPos;
 	FVector Intersection;
-	bool bMousePostion;
-	ProjectMouseToGroundPlane(ScreenPos, Intersection, bMousePostion);
+	bool bMousePostion = false;
+	PlayerController->ProjectMouseToGroundPlane(ScreenPos, Intersection, bMousePostion);
+
 	if (bMousePostion)
 	{
-		FindActorsAtIntersection(Intersection, 100.0f);
+		if (WaypointCursor)
+		{
+			WaypointCursor->MouseToGroundPlane(Intersection);
+			WaypointCursor->Destroy();
+			WaypointCursor = nullptr;
+		}
+		else
+		{
+			FindActorsAtIntersection(Intersection, 100.0f);
+		}
 	}
 }
 
@@ -157,12 +178,16 @@ void AUSPlayer::MoveTracking()
 
 void AUSPlayer::EdgeMode()
 {
-	FVector2D ViewportCenter = GetViewportCenter();
+	AUSTowerPlayerController* PlayerController = Cast<AUSTowerPlayerController>(GetController());
+	if (PlayerController == nullptr)
+		return;
+
+	FVector2D ViewportCenter = PlayerController->GetViewportCenter();
 
 	FVector2D ScreenPos;
 	FVector Intersection;
-	bool bMousePostion;
-	ProjectMouseToGroundPlane(ScreenPos, Intersection, bMousePostion);
+	bool bMousePostion = false;
+	PlayerController->ProjectMouseToGroundPlane(ScreenPos, Intersection, bMousePostion);
 
 	FVector Direction = CursorDistFromViewportCenter(ScreenPos - ViewportCenter);
 	FTransform ActorTransform = GetActorTransform();
@@ -170,58 +195,6 @@ void AUSPlayer::EdgeMode()
 
 	float Strength = 1.0f;
 	AddMovementInput(TransformDirection, Strength);
-}
-
-FVector2D AUSPlayer::GetViewportCenter()
-{
-	APlayerController* PlayerController = CastChecked<APlayerController>(GetController());
-	if (PlayerController == nullptr)
-		return FVector2D::ZeroVector;
-
-	int32 ViewportSizeX, ViewportSizeY;
-	PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
-
-	return FVector2D(ViewportSizeX / 2.0f, ViewportSizeY / 2.0f);
-}
-
-FVector2D AUSPlayer::GetMouseViewportPosition(bool& bMousePostion)
-{
-	APlayerController* PlayerController = CastChecked<APlayerController>(GetController());
-	if (PlayerController == nullptr)
-		return FVector2D::ZeroVector;
-
-	float LocationX, LocationY;
-	bMousePostion = PlayerController->GetMousePosition(LocationX, LocationY);
-
-	return FVector2D(LocationX, LocationY);
-}
-
-FVector AUSPlayer::ProjectScreenPositionToGamePlane(FVector2D ScreenPosition)
-{
-	APlayerController* PlayerController = CastChecked<APlayerController>(GetController());
-	if (PlayerController == nullptr)
-		return FVector::ZeroVector;
-
-	FVector WorldPosition, WorldDirection;
-	PlayerController->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldPosition, WorldDirection);
-
-	FVector LineEnd = WorldPosition + (WorldDirection * 100000.0f);
-	FPlane APlane(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 1.0f));
-
-	FVector Intersection;
-	float T;
-	UKismetMathLibrary::LinePlaneIntersection(WorldPosition, LineEnd, APlane, T, Intersection);
-
-	return Intersection;
-}
-
-void AUSPlayer::ProjectMouseToGroundPlane(FVector2D& ScreenPosition, FVector& Intersection, bool& bMousePostion)
-{
-	ScreenPosition = GetMouseViewportPosition(bMousePostion);
-	if (bMousePostion == false)
-		ScreenPosition = GetViewportCenter();
-
-	Intersection = ProjectScreenPositionToGamePlane(ScreenPosition);
 }
 
 FVector AUSPlayer::CursorDistFromViewportCenter(FVector2D ScreenPos)
@@ -235,7 +208,11 @@ FVector AUSPlayer::CursorDistFromViewportCenter(FVector2D ScreenPos)
 
 FVector2D AUSPlayer::CalculateEdgeMoveDistance()
 {
-	FVector2D ViewportCenter = GetViewportCenter();
+	AUSTowerPlayerController* PlayerController = CastChecked<AUSTowerPlayerController>(GetController());
+	if (PlayerController == nullptr)
+		return FVector2D::ZeroVector;
+
+	FVector2D ViewportCenter = PlayerController->GetViewportCenter();
 
 	// 최종 Edge Move Distance 계산
 	return FVector2D(ViewportCenter.X - EdgeMoveDistance, ViewportCenter.Y - EdgeMoveDistance);
@@ -327,5 +304,14 @@ void AUSPlayer::TowerSelectUI(AActor* SelectedActor)
 	
 	TowerSelect->AddToViewport();
 	TowerSelect->SetPositionInViewport(ScreenPosition);
+}
 
+void AUSPlayer::ResponseMessage(FGameplayTag Channel, const FUSTowerWaypointUIMessage& Payload)
+{
+	WaypointCursor = Cast<AUSWaypointCursor>(GetWorld()->SpawnActor<AActor>(
+		AUSWaypointCursor::StaticClass(),
+		FVector::ZeroVector,
+		FRotator::ZeroRotator
+	));
+	WaypointCursor->SetAddressAsString(Payload.AddressAsString);
 }

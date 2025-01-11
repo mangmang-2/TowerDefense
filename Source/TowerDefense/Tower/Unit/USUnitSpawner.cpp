@@ -5,7 +5,7 @@
 #include "../../Unit/USUnit.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "NavigationSystem.h"
+
 
 // Sets default values
 AUSUnitSpawner::AUSUnitSpawner()
@@ -60,12 +60,11 @@ void AUSUnitSpawner::SpawnActors()
             SpawnedActor->Tags.AddUnique(FName(AddressAsString));
             SpawnedActor->Tags.AddUnique(FName(TagName));
             
+            OnUnitSpawn.Broadcast(SpawnedActor);
+
             SpawnList.Add(SpawnedActor);
-            FVector Waypoint =  FindNearestNavMeshLocation(SpawnedActor->GetActorLocation());
-            SpawnedActor->SetWaypoint(Waypoint);
         }
-    }
-    
+    }    
 }
 
 void AUSUnitSpawner::InitData(int32 MaxCount, int32 BatchCount, float Interval, bool Repeat, TSubclassOf<class AUSUnit> UnitClass, FVector InSpawnPoint)
@@ -103,17 +102,4 @@ void AUSUnitSpawner::DeathActors()
     }
 }
 
-FVector AUSUnitSpawner::FindNearestNavMeshLocation(const FVector& CurrentLocation)
-{
-    FNavLocation NearestNavLocation;
-    UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
-
-    FVector QueryExtent(500.0f, 500.0f, 500.0f); // 검색 반경
-    if (NavSystem && NavSystem->ProjectPointToNavigation(CurrentLocation, NearestNavLocation, QueryExtent))
-    {
-        return NearestNavLocation;
-    }
-
-    return CurrentLocation;
-}
 

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "USUnitSpawner.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitSpawn, AUSUnit*, Unit);
 UCLASS()
 class TOWERDEFENSE_API AUSUnitSpawner : public AActor
 {
@@ -33,7 +34,6 @@ public:
 	UFUNCTION()
     void DeathActors();
 
-	FVector FindNearestNavMeshLocation(const FVector& CurrentLocation);
 protected:
 	FTimerHandle SpawnTimerHandle;
 	bool RepeatCount = false;
@@ -59,4 +59,7 @@ protected:
 	FName TagName;
 
 	TArray<TObjectPtr<class AUSUnit>> SpawnList;
+
+public:
+	FOnUnitSpawn OnUnitSpawn;
 };
