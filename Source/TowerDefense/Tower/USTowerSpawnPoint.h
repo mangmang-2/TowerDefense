@@ -27,4 +27,8 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UStaticMeshComponent> Mesh;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UGroundMaterialComponent> GroundMaterial;
+	
 };

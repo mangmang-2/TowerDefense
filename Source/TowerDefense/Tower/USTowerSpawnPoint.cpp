@@ -2,6 +2,7 @@
 
 
 #include "Tower/USTowerSpawnPoint.h"
+#include "../Utility/Component/GroundMaterialComponent.h"
 
 
 
@@ -13,6 +14,8 @@ AUSTowerSpawnPoint::AUSTowerSpawnPoint()
 	PrimaryActorTick.bCanEverTick = false;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+
+	GroundMaterial = CreateDefaultSubobject<UGroundMaterialComponent>(TEXT("GroundMaterial"));
 }
 
 // Called when the game starts or when spawned
