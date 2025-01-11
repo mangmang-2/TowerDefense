@@ -23,9 +23,14 @@ void AUSUnitTower::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UnitSpawner->InitData(3, 3, 1.0f, true, SpawnUnitClass, GetActorLocation());
-	UnitSpawner->OnUnitSpawn.AddDynamic(this, &ThisClass::SpawnUnit);
-
+	FVector ActorLocation = GetActorLocation();
+	ActorLocation.Z = 0;
+	if (UnitSpawner)
+	{
+		UnitSpawner->InitData(1, 1, 1.0f, true, SpawnUnitClass, ActorLocation);
+		UnitSpawner->OnUnitSpawn.AddDynamic(this, &ThisClass::SpawnUnit);
+	}
+	
 	Waypoint = FindNearestNavMeshLocation(GetActorLocation());
 	UnitFormation = GetFormationPosition(Waypoint, UnitFormationLength, UnitFormationLength);
 
@@ -44,6 +49,8 @@ void AUSUnitTower::SpawnUnit(AUSUnit* Unit)
 		return;
 
 	Unit->SetWaypoint(UnitFormation[Units.Num()]);
+	Unit->GiveAbility(Abilities);
+
 	Units.Add(Unit);
 }
 

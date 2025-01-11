@@ -60,6 +60,9 @@ protected:
 
 	TArray<TObjectPtr<class AUSUnit>> SpawnList;
 
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<class UGameplayAbility>> Abilities;
+
 public:
 	FOnUnitSpawn OnUnitSpawn;
 };

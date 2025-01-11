@@ -43,8 +43,11 @@ void AUSTowerBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	FGameplayAbilitySpec StartSpec(StartAbility);
-	ASC->GiveAbility(StartSpec);
+	for (const auto& Ability : Abilities)
+	{
+		FGameplayAbilitySpec Spec(Ability);
+		ASC->GiveAbility(Spec);
+	}
 
 	AttackerComponent->SetAbilitySystemComponent(ASC);
 

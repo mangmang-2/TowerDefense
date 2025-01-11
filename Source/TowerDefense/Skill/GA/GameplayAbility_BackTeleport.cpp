@@ -54,7 +54,7 @@ void UGameplayAbility_BackTeleport::StopTarget()
         AUSUnit* Unit = Cast<AUSUnit>(Target);
         if (Unit)
         {
-            Unit->IdleBehaviorTree();
+            Unit->StopAction();
             Unit->SetNiagara(NiagaraSystem);
         }
     }

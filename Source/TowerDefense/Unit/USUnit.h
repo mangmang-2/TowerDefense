@@ -41,6 +41,13 @@ public:
 	void UpdateWaypoint();
 
 	void SetNiagara(TObjectPtr<class UNiagaraSystem> NiagaraSystem);
+
+	void SetMatchingActor(AUSUnit* TargetActor);
+	void CombatState(bool bState);
+
+	void GiveAbility(TArray<TSubclassOf<class UGameplayAbility>> Abilities);
+
+	void StopAction();
 protected:
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;

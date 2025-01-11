@@ -30,8 +30,7 @@ protected:
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UGameplayAbility> StartAbility;
-
+	TArray<TSubclassOf<class UGameplayAbility>> Abilities;
 	UPROPERTY()
 	TObjectPtr<class UUSTowerStatAttributeSet> AttributeSet;
 

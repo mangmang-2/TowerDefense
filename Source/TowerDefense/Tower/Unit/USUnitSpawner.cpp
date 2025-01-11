@@ -59,7 +59,8 @@ void AUSUnitSpawner::SpawnActors()
             FString AddressAsString = FString::Printf(TEXT("%p"), this);
             SpawnedActor->Tags.AddUnique(FName(AddressAsString));
             SpawnedActor->Tags.AddUnique(FName(TagName));
-            
+            SpawnedActor->GiveAbility(Abilities);
+
             OnUnitSpawn.Broadcast(SpawnedActor);
 
             SpawnList.Add(SpawnedActor);

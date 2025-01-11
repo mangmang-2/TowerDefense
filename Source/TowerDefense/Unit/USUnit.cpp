@@ -144,6 +144,17 @@ void AUSUnit::SetWaypoint(FVector InWaypoint)
 	TargetWaypoint = InWaypoint;
 	TargetWaypoint.Z = 0;
 	IsReady = false;
+
+	AAIController* AIController = Cast<AAIController>(GetController());
+	if (AIController)
+	{
+		UBlackboardComponent* Blackboard = AIController->GetBlackboardComponent();
+		if (Blackboard)
+		{
+			Blackboard->SetValueAsVector(TEXT("WayPoint"), TargetWaypoint);
+			Blackboard->SetValueAsBool(TEXT("Ready"), IsReady);
+		}
+	}
 }
 
 void AUSUnit::UpdateWaypoint()
@@ -163,6 +174,15 @@ void AUSUnit::UpdateWaypoint()
 		if (FVector::Dist(CurrentLocation, TargetWaypoint) < 10.0f)
 		{
 			IsReady = true;
+			AAIController* AIController = Cast<AAIController>(GetController());
+			if (AIController)
+			{
+				UBlackboardComponent* Blackboard = AIController->GetBlackboardComponent();
+				if (Blackboard)
+				{
+					Blackboard->SetValueAsBool(TEXT("Ready"), IsReady);
+				}
+			}
 			FloatingPawnMovement->StopActiveMovement(); // 이동 중지
 		}
 	}
@@ -178,6 +198,69 @@ void AUSUnit::SetNiagara(TObjectPtr<class UNiagaraSystem> NiagaraSystem)
 	else
 	{
 		NiagaraEffect->Deactivate();
+	}
+}
+
+void AUSUnit::SetMatchingActor(AUSUnit* TargetActor)
+{
+	IdleBehaviorTree();
+	CombatState(true);
+	TargetActor->CombatState(true);
+
+	AAIController* AIController = Cast<AAIController>(GetController());
+	if (AIController)
+	{
+		UBlackboardComponent* Blackboard = AIController->GetBlackboardComponent();
+		if (Blackboard)
+		{
+			Blackboard->SetValueAsObject(TEXT("Target"), TargetActor);
+		}
+	}
+
+	RunBehaviorTree();
+}
+
+void AUSUnit::CombatState(bool bState)
+{
+	AAIController* AIController = Cast<AAIController>(GetController());
+	if (AIController)
+	{
+		UBlackboardComponent* Blackboard = AIController->GetBlackboardComponent();
+		if (Blackboard)
+		{
+			Blackboard->SetValueAsBool(TEXT("Combat"), bState);
+		}
+	}
+}
+
+void AUSUnit::GiveAbility(TArray<TSubclassOf<class UGameplayAbility>> Abilities)
+{
+	for (const auto& Ability : Abilities)
+	{
+		FGameplayAbilitySpec Spec(Ability);
+		ASC->GiveAbility(Spec);
+	}
+}
+
+void AUSUnit::StopAction()
+{
+	IdleBehaviorTree();
+	CombatState(false);
+	AAIController* AIController = Cast<AAIController>(GetController());
+	if (AIController)
+	{
+		UBlackboardComponent* Blackboard = AIController->GetBlackboardComponent();
+		if (Blackboard)
+		{
+			// 순서 잘지켜야..
+			AUSUnit* TargetObject = Cast<AUSUnit>(Blackboard->GetValueAsObject(TEXT("Target")));
+			Blackboard->SetValueAsObject(TEXT("Target"), nullptr);	
+			if (TargetObject)
+			{
+				TargetObject->StopAction();
+				TargetObject->RunBehaviorTree();
+			}
+		}
 	}
 }
 
