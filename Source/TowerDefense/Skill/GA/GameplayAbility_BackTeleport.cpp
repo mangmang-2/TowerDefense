@@ -73,6 +73,7 @@ void UGameplayAbility_BackTeleport::Teleport()
         AUSUnit* Unit = Cast<AUSUnit>(Target);
         if (Unit)
         {
+            Unit->StopAction();
             Unit->RunBehaviorTree();
             FVector TeleportLocation = CalculateBacktrackLocation(Target, TeleportDistance);
             Target->SetActorLocation(TeleportLocation);

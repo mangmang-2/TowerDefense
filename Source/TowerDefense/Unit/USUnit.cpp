@@ -141,6 +141,8 @@ FVector AUSUnit::GetRecordPostion(float Distance)
 
 void AUSUnit::SetWaypoint(FVector InWaypoint)
 {
+	StopAction();
+	RunBehaviorTree();
 	TargetWaypoint = InWaypoint;
 	TargetWaypoint.Z = 0;
 	IsReady = false;
