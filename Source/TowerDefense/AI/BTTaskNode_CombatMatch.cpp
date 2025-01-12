@@ -27,7 +27,21 @@ EBTNodeResult::Type UBTTaskNode_CombatMatch::ExecuteTask(UBehaviorTreeComponent&
         return EBTNodeResult::Failed;
     }
 
-    TargetActor->SetMatchingActor(ControllingPawn);
+    AAIController* AIController = Cast<AAIController>(TargetActor->GetController());
+    if (AIController)
+    {
+        UBlackboardComponent* Blackboard = AIController->GetBlackboardComponent();
+        if (Blackboard)
+        {
+            AUSUnit* GoalActor = Cast<AUSUnit>(Blackboard->GetValueAsObject(TEXT("Target")));
+            if (GoalActor != nullptr)
+            {
+                return EBTNodeResult::Failed;
+            }
+        }
+    }
 
+    TargetActor->SetMatchingActor(ControllingPawn);
+    UE_LOG(LogTemp, Warning, TEXT("%s") , *TargetActor->GetName());
     return EBTNodeResult::Succeeded;
 }
