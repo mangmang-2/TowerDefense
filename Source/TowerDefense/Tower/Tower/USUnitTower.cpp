@@ -3,7 +3,7 @@
 
 #include "Tower/Tower/USUnitTower.h"
 #include "../../Utility/DataTable/USTowerData.h"
-#include "../Unit/USUnitSpawner.h"
+#include "../Unit/USSpawner.h"
 #include "NavigationSystem.h"
 #include "../../Unit/USUnit.h"
 #include "../../Utility/MessageSystem/MesssageStruct/USTowerMessage.h"
@@ -16,7 +16,7 @@ UE_DEFINE_GAMEPLAY_TAG(TAG_UnitWaypoint_Message, "Message.Unit.Waypoint");
 
 AUSUnitTower::AUSUnitTower() : Super(ETowerType::Unit)
 {
-	UnitSpawner = CreateDefaultSubobject<AUSUnitSpawner>(TEXT("UnitSpawner"));
+	UnitSpawner = CreateDefaultSubobject<UUSSpawner>(TEXT("UnitSpawner"));
 }
 
 void AUSUnitTower::BeginPlay()
@@ -27,7 +27,7 @@ void AUSUnitTower::BeginPlay()
 	ActorLocation.Z = 0;
 	if (UnitSpawner)
 	{
-		UnitSpawner->InitData(1, 1, 1.0f, true, SpawnUnitClass, ActorLocation);
+		//UnitSpawner->InitData(1, 1, 1.0f, true, SpawnUnitClass, ActorLocation);
 		UnitSpawner->OnUnitSpawn.AddDynamic(this, &ThisClass::SpawnUnit);
 	}
 	
@@ -48,7 +48,11 @@ void AUSUnitTower::SpawnUnit(AUSUnit* Unit)
 	if(Unit == nullptr)
 		return;
 
-	Unit->SetWaypoint(UnitFormation[Units.Num()]);
+	if(bMonsterTower == false)
+	{
+		Unit->SetWaypoint(UnitFormation[Units.Num()]);
+	}
+
 	Unit->GiveAbility(Abilities);
 
 	Units.Add(Unit);

@@ -3,31 +3,31 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "USUnitSpawner.generated.h"
+#include "Components/ActorComponent.h"
+#include "USSpawner.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitSpawn, AUSUnit*, Unit);
-UCLASS()
-class TOWERDEFENSE_API AUSUnitSpawner : public AActor
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitSpawn, class AUSUnit*, Unit);
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class TOWERDEFENSE_API UUSSpawner : public UActorComponent
 {
 	GENERATED_BODY()
-	
+
 public:	
-	// Sets default values for this actor's properties
-	AUSUnitSpawner();
+	// Sets default values for this component's properties
+	UUSSpawner();
 
 protected:
-	// Called when the game starts or when spawned
+	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+protected:
 	UFUNCTION()
     void SpawnActors();
-
-	void InitData(int32 MaxCount, int32 BatchCount, float Interval, bool Repeat, TSubclassOf<class AUSUnit> UnitClass, FVector InSpawnPoint);
 
 	void SetWaypoint(FVector InWayPoint);
 
@@ -36,12 +36,11 @@ public:
 
 protected:
 	FTimerHandle SpawnTimerHandle;
+	UPROPERTY(EditAnywhere)
 	bool RepeatCount = false;
 
 	// 웨이포인트
 	FVector WayPoint;
-
-	FVector SpawnPoint;
 
 	UPROPERTY(EditAnywhere)
 	int32 MaxSpawnCount = 20;
@@ -65,4 +64,5 @@ protected:
 
 public:
 	FOnUnitSpawn OnUnitSpawn;
+		
 };

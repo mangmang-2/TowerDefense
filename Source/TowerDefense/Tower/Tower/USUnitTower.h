@@ -6,7 +6,6 @@
 #include "Tower/Tower/USTowerBase.h"
 #include "USUnitTower.generated.h"
 
-
 /**
  * 
  */
@@ -31,11 +30,14 @@ public:
 	void ResponseMessage(struct FGameplayTag Channel, const struct FUSTowerWaypointUIMessage& Payload);
 public:
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<class AUSUnitSpawner> UnitSpawner;
+	TObjectPtr<class UUSSpawner> UnitSpawner;
 
 protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AUSUnit> SpawnUnitClass;
+
+	UPROPERTY(EditAnywhere)
+	bool bMonsterTower = false;
 
 	FVector Waypoint;
 	TArray<FVector> UnitFormation;
