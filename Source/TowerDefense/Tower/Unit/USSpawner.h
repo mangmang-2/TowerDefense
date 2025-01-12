@@ -38,6 +38,7 @@ protected:
 	FTimerHandle SpawnTimerHandle;
 	UPROPERTY(EditAnywhere)
 	bool RepeatCount = false;
+	int32 SpawnCount = 0;
 
 	// 웨이포인트
 	FVector WayPoint;

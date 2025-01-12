@@ -48,6 +48,9 @@ public:
 	void GiveAbility(TArray<TSubclassOf<class UGameplayAbility>> Abilities);
 
 	void StopAction();
+
+	UFUNCTION()
+	void OnHealthChange();
 protected:
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;

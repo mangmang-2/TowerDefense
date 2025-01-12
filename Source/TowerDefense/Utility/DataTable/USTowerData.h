@@ -63,4 +63,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int32 AttackRange;
+
+	UPROPERTY(EditAnywhere)
+	int32 AttackDamage;
+
+	UPROPERTY(EditAnywhere)
+	int32 Health;
 };

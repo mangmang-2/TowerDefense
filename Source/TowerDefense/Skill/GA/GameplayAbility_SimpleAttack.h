@@ -25,4 +25,10 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UAnimMontage> ActionMontage;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UGameplayEffect> AttackDamageEffect;
+
+	UPROPERTY()
+	TWeakObjectPtr<const class AActor> TargetActor;
 };

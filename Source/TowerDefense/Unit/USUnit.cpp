@@ -44,6 +44,10 @@ void AUSUnit::BeginPlay()
 
 	TargetWaypoint = GetActorLocation();
 
+	if (UUSTowerStatAttributeSet* Stat = const_cast<UUSTowerStatAttributeSet*>(ASC->GetSet<UUSTowerStatAttributeSet>()))
+	{
+		Stat->OnHealthChange.AddDynamic(this, &ThisClass::OnHealthChange);
+	}
 }
 
 void AUSUnit::PossessedBy(AController* NewController)
@@ -264,6 +268,16 @@ void AUSUnit::StopAction()
 			}
 		}
 	}
+}
+
+void AUSUnit::OnHealthChange()
+{
+	if (ASC->GetSet<UUSTowerStatAttributeSet>()->GetHealth() <= 0)
+	{
+		OnUnitDeath.Broadcast();
+	}
+
+	Destroy();
 }
 
 

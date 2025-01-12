@@ -9,6 +9,7 @@
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
+#include "../Tag/USGameplayTag.h"
 
 
 UGameplayAbility_TripleAttack::UGameplayAbility_TripleAttack()
@@ -45,7 +46,10 @@ void UGameplayAbility_TripleAttack::OnCompleteCallback(const class AActor* Targe
 	if (ASC && AttackDamageEffect)
 	{
 		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
-		ASC->BP_ApplyGameplayEffectToSelf(AttackDamageEffect, 1, EffectContext);
+		FGameplayEffectSpecHandle EffectSpec = ASC->MakeOutgoingSpec(AttackDamageEffect, 1.0f, EffectContext);
+		EffectSpec.Data->SetSetByCallerMagnitude(USTAG_TOWER_SKILL_DAMAGE, 20.0f);
+
+		ASC->ApplyGameplayEffectSpecToTarget(*EffectSpec.Data.Get(), ASC);
 	}
 }
 
@@ -56,7 +60,8 @@ void UGameplayAbility_TripleAttack::OnLastCompleteCallback(const AActor* Target)
 	if (ASC && AttackDamageEffect)
 	{
 		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
-		ASC->BP_ApplyGameplayEffectToSelf(AttackDamageEffect, 1, EffectContext);
+		FGameplayEffectSpecHandle EffectSpec = ASC->MakeOutgoingSpec(AttackDamageEffect, 1.0f, EffectContext);
+		EffectSpec.Data->SetSetByCallerMagnitude(USTAG_TOWER_SKILL_DAMAGE, 20.0f);
 	}
 
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);

@@ -39,7 +39,7 @@ void UUSSpawner::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 
 void UUSSpawner::SpawnActors()
 {
-    if (RepeatCount == false && SpawnList.Num() >= MaxSpawnCount)
+    if (RepeatCount == false && SpawnCount >= MaxSpawnCount)
     {
         GetWorld()->GetTimerManager().ClearTimer(SpawnTimerHandle);
         return;
@@ -70,6 +70,7 @@ void UUSSpawner::SpawnActors()
             OnUnitSpawn.Broadcast(SpawnedActor);
 
             SpawnList.Add(SpawnedActor);
+            SpawnCount++;
         }
     }
 }

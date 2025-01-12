@@ -8,6 +8,7 @@
 #include "AbilitySystemComponent.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "../Tag/USGameplayTag.h"
 
 
 UGameplayAbility_ArrowAttack::UGameplayAbility_ArrowAttack()
@@ -39,7 +40,10 @@ void UGameplayAbility_ArrowAttack::OnCompleteCallback(const class AActor* Target
 	if (ASC && AttackDamageEffect)
 	{
 		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
-		ASC->BP_ApplyGameplayEffectToSelf(AttackDamageEffect, 1, EffectContext);
+		FGameplayEffectSpecHandle EffectSpec = ASC->MakeOutgoingSpec(AttackDamageEffect, 1.0f, EffectContext);
+		EffectSpec.Data->SetSetByCallerMagnitude(USTAG_TOWER_SKILL_DAMAGE, 20.0f);
+
+		ASC->ApplyGameplayEffectSpecToTarget(*EffectSpec.Data.Get(), ASC);
 	}
 
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
