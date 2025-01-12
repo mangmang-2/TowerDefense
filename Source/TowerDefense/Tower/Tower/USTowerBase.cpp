@@ -77,6 +77,12 @@ void AUSTowerBase::InitTower(FUSTowerUpgradeData UpgradeData)
 {
 	TowerRangeComponent->SetRange(UpgradeData.AttackRange);
 	AttackerComponent->SetRange(UpgradeData.AttackRange);
+	Health = UpgradeData.Health;
+}
+
+float AUSTowerBase::GetHealth()
+{
+	return Health;
 }
 
 

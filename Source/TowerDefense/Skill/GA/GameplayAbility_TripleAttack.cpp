@@ -47,7 +47,7 @@ void UGameplayAbility_TripleAttack::OnCompleteCallback(const class AActor* Targe
 	{
 		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
 		FGameplayEffectSpecHandle EffectSpec = ASC->MakeOutgoingSpec(AttackDamageEffect, 1.0f, EffectContext);
-		EffectSpec.Data->SetSetByCallerMagnitude(USTAG_TOWER_SKILL_DAMAGE, 20.0f);
+		EffectSpec.Data->SetSetByCallerMagnitude(USTAG_TOWER_SKILL_DAMAGE, AttackDamage);
 
 		ASC->ApplyGameplayEffectSpecToTarget(*EffectSpec.Data.Get(), ASC);
 	}
@@ -61,7 +61,7 @@ void UGameplayAbility_TripleAttack::OnLastCompleteCallback(const AActor* Target)
 	{
 		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
 		FGameplayEffectSpecHandle EffectSpec = ASC->MakeOutgoingSpec(AttackDamageEffect, 1.0f, EffectContext);
-		EffectSpec.Data->SetSetByCallerMagnitude(USTAG_TOWER_SKILL_DAMAGE, 20.0f);
+		EffectSpec.Data->SetSetByCallerMagnitude(USTAG_TOWER_SKILL_DAMAGE, AttackDamage);
 	}
 
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);

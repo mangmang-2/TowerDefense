@@ -24,7 +24,7 @@ protected:
 
 public:	
 	void InitTower(FUSTowerUpgradeData UpgradeData);
-
+	float GetHealth();
 protected:
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;
@@ -50,5 +50,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UUSTowerRangeComponent> TowerRangeComponent;
+
+	float Health = 100;
 	
 };

@@ -33,7 +33,7 @@ void UGameplayAbility_SimpleAttack::OnCompleteCallback()
 	{
 		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
 		FGameplayEffectSpecHandle EffectSpec = ASC->MakeOutgoingSpec(AttackDamageEffect, 1.0f, EffectContext);
-		EffectSpec.Data->SetSetByCallerMagnitude(USTAG_TOWER_SKILL_DAMAGE, 10.0f);
+		EffectSpec.Data->SetSetByCallerMagnitude(USTAG_TOWER_SKILL_DAMAGE, AttackDamage);
 
 		ASC->ApplyGameplayEffectSpecToTarget(*EffectSpec.Data.Get(), ASC);
 	}

@@ -31,4 +31,7 @@ protected:
 
 	UPROPERTY()
 	TWeakObjectPtr<const class AActor> TargetActor;
+
+	UPROPERTY(EditAnywhere)
+	float AttackDamage = 10.0f;
 };

@@ -5,6 +5,7 @@
 #include "../../Unit/USUnit.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "../Tower/USUnitTower.h"
 
 // Sets default values for this component's properties
 UUSSpawner::UUSSpawner()
@@ -61,16 +62,20 @@ void UUSSpawner::SpawnActors()
 
         if (SpawnedActor)
         {
-            SpawnedActor->OnUnitDeath.AddDynamic(this, &UUSSpawner::DeathActors);
-            FString AddressAsString = FString::Printf(TEXT("%p"), this);
-            SpawnedActor->Tags.AddUnique(FName(AddressAsString));
-            SpawnedActor->Tags.AddUnique(FName(TagName));
-            SpawnedActor->GiveAbility(Abilities);
+            AUSUnitTower* UnitTower = Cast<AUSUnitTower>(GetOwner());
+            if (UnitTower)
+            {
+                SpawnedActor->OnUnitDeath.AddDynamic(this, &UUSSpawner::DeathActors);
+                FString AddressAsString = FString::Printf(TEXT("%p"), this);
+                SpawnedActor->Tags.AddUnique(FName(AddressAsString));
+                SpawnedActor->Tags.AddUnique(FName(TagName));
+                SpawnedActor->GiveAbility(Abilities);
+                SpawnedActor->SetHealth(UnitTower->GetHealth());
+                OnUnitSpawn.Broadcast(SpawnedActor);
 
-            OnUnitSpawn.Broadcast(SpawnedActor);
-
-            SpawnList.Add(SpawnedActor);
-            SpawnCount++;
+                SpawnList.Add(SpawnedActor);
+                SpawnCount++;
+            }
         }
     }
 }
@@ -80,21 +85,12 @@ void UUSSpawner::SetWaypoint(FVector InWayPoint)
     WayPoint = InWayPoint;
 }
 
-void UUSSpawner::DeathActors()
+void UUSSpawner::DeathActors(class AActor* Actor)
 {
-    TArray<AActor*> AllPawns;
-
-    FString AddressAsString = FString::Printf(TEXT("%p"), this);
-    UGameplayStatics::GetAllActorsWithTag(GetWorld(), *AddressAsString, AllPawns);
-
-    SpawnList.Empty();
-    for (AActor* Actor : AllPawns)
-    {
-        if (AUSUnit* Unit = Cast<AUSUnit>(Actor))
+    SpawnList.RemoveAll([Actor](const TObjectPtr<class AUSUnit>& Item)
         {
-            SpawnList.Add(Unit);
-        }
-    }
+            return Item == Actor;
+        });
 }
 
 

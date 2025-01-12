@@ -56,6 +56,12 @@ void AUSUnit::PossessedBy(AController* NewController)
 	RunBehaviorTree();
 }
 
+void AUSUnit::Destroyed()
+{
+	StopAction();
+	Super::Destroyed();
+}
+
 // Called every frame
 void AUSUnit::Tick(float DeltaTime)
 {
@@ -274,10 +280,22 @@ void AUSUnit::OnHealthChange()
 {
 	if (ASC->GetSet<UUSTowerStatAttributeSet>()->GetHealth() <= 0)
 	{
-		OnUnitDeath.Broadcast();
+		OnUnitDeath.Broadcast(this);
+		Destroy();
 	}
+}
 
-	Destroy();
+void AUSUnit::SetHealth(float Health)
+{
+	if(ASC == nullptr)
+		return;
+	UUSTowerStatAttributeSet* Stat = const_cast<UUSTowerStatAttributeSet*>(ASC->GetSet<UUSTowerStatAttributeSet>());
+
+	if(Stat == nullptr)
+		return;
+
+	Stat->SetHealth(Health);
+	Stat->SetMaxHealth(Health);
 }
 
 

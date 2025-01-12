@@ -32,7 +32,7 @@ protected:
 	void SetWaypoint(FVector InWayPoint);
 
 	UFUNCTION()
-    void DeathActors();
+    void DeathActors(class AActor* Actor);
 
 protected:
 	FTimerHandle SpawnTimerHandle;

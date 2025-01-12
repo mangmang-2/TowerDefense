@@ -7,7 +7,7 @@
 #include "USUnit.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUnitDeath);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitDeath, class AActor*, Actor);
 
 UCLASS()
 class TOWERDEFENSE_API AUSUnit : public APawn
@@ -22,6 +22,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
+	virtual void Destroyed() override;
 
 public:	
 	// Called every frame
@@ -51,6 +52,8 @@ public:
 
 	UFUNCTION()
 	void OnHealthChange();
+
+	void SetHealth(float Health);
 protected:
 	UPROPERTY()
 	TObjectPtr<class UAbilitySystemComponent> ASC;

@@ -56,6 +56,8 @@ void AUSUnitTower::SpawnUnit(AUSUnit* Unit)
 	Unit->GiveAbility(Abilities);
 
 	Units.Add(Unit);
+
+	Unit->OnUnitDeath.AddDynamic(this, &ThisClass::DeathActors);
 }
 
 FVector AUSUnitTower::FindNearestNavMeshLocation(const FVector& CurrentLocation)
@@ -107,5 +109,12 @@ void AUSUnitTower::ResponseMessage(FGameplayTag Channel, const FUSTowerWaypointU
 	{
 		Units[i]->SetWaypoint(UnitFormation[i]);
 	}
-	
+}
+
+void AUSUnitTower::DeathActors(class AActor* Actor)
+{
+	Units.RemoveAll([Actor](const TObjectPtr<class AUSUnit>& Item)
+		{
+			return Item == Actor;
+		});
 }

@@ -40,4 +40,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float HomingAccelerationMagnitude = 2000.0f;
+
+	UPROPERTY(EditAnywhere)
+	float AttackDamage = 20.0f;
 };

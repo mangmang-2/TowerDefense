@@ -28,6 +28,8 @@ public:
 	TArray<FVector> GetFormationPosition(const FVector& InWayPoint, float Width, float Height);
 
 	void ResponseMessage(struct FGameplayTag Channel, const struct FUSTowerWaypointUIMessage& Payload);
+	UFUNCTION()
+	void DeathActors(class AActor* Actor);
 public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UUSSpawner> UnitSpawner;

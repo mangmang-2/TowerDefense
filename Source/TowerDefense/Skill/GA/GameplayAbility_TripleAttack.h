@@ -61,4 +61,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UGameplayEffect> CooldownEffect;
 	
+	UPROPERTY(EditAnywhere)
+	float AttackDamage = 20;
 };
