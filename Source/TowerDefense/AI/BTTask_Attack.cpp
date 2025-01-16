@@ -32,11 +32,21 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	PayloadData.Target = Cast<AActor>(BlackboardComp->GetValueAsObject(TEXT("Target")));
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(ControllingPawn, USTAG_MESSAGE_UNIT_ATTACK, PayloadData);
 
+	TWeakObjectPtr<APawn> WeakControllingPawn = ControllingPawn;
+	TWeakObjectPtr<UBehaviorTreeComponent> WeakOwnerComp = &OwnerComp;
+
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]() {
-		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-		})
-		, 3.0f, false);
+	GetWorld()->GetTimerManager().SetTimer(
+		TimerHandle,
+		FTimerDelegate::CreateLambda([WeakOwnerComp, WeakControllingPawn, this]() {
+			if (WeakOwnerComp.IsValid() && WeakControllingPawn.IsValid())
+			{
+				this->FinishLatentTask(*WeakOwnerComp.Get(), EBTNodeResult::Succeeded);
+			}
+			}),
+		3.0f,
+		false
+	);
 
 	return EBTNodeResult::InProgress;
 }
