@@ -29,6 +29,7 @@ void AUSUnitTower::BeginPlay()
 	{
 		//UnitSpawner->InitData(1, 1, 1.0f, true, SpawnUnitClass, ActorLocation);
 		UnitSpawner->OnUnitSpawn.AddDynamic(this, &ThisClass::SpawnUnit);
+		UnitSpawner->OnSpawnComplete.AddDynamic(this, &ThisClass::SpawnComplete);
 	}
 	
 	Waypoint = FindNearestNavMeshLocation(GetActorLocation());
@@ -36,6 +37,11 @@ void AUSUnitTower::BeginPlay()
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(GetWorld());
 	MessageSubsystem.RegisterListener(TAG_UnitWaypoint_Message, this, &ThisClass::ResponseMessage);
+}
+
+void AUSUnitTower::Destroyed()
+{
+	Super::Destroyed();
 }
 
 void AUSUnitTower::Tick(float DeltaTime)
@@ -117,4 +123,17 @@ void AUSUnitTower::DeathActors(class AActor* Actor)
 		{
 			return Item == Actor;
 		});
+}
+
+void AUSUnitTower::ReplaceUnitClass(TSubclassOf<class AUSUnit> UnitClass)
+{
+	if(UnitSpawner == nullptr)
+		return;
+
+	UnitSpawner->ReplaceUnitClass(UnitClass);
+}
+
+void AUSUnitTower::SpawnComplete()
+{
+	Destroy();
 }

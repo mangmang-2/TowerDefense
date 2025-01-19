@@ -24,7 +24,7 @@ void UUSSpawner::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &UUSSpawner::SpawnActors, SpawnInterval, true, 1.0f);
+    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &UUSSpawner::SpawnActors, SpawnInterval, true, 5.0f);
 
 }
 
@@ -42,6 +42,7 @@ void UUSSpawner::SpawnActors()
 {
     if (RepeatCount == false && SpawnCount >= MaxSpawnCount)
     {
+        OnSpawnComplete.Broadcast();
         GetWorld()->GetTimerManager().ClearTimer(SpawnTimerHandle);
         return;
     }
@@ -91,6 +92,11 @@ void UUSSpawner::DeathActors(class AActor* Actor)
         {
             return Item == Actor;
         });
+}
+
+void UUSSpawner::ReplaceUnitClass(TSubclassOf<class AUSUnit> UnitClass)
+{
+    SpawnUnitClass = UnitClass;
 }
 
 

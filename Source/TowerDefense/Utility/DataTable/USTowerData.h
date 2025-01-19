@@ -70,3 +70,4 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 Health;
 };
+

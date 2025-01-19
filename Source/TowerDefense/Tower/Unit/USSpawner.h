@@ -8,6 +8,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitSpawn, class AUSUnit*, Unit);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpawnComplete);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TOWERDEFENSE_API UUSSpawner : public UActorComponent
 {
@@ -65,5 +67,7 @@ protected:
 
 public:
 	FOnUnitSpawn OnUnitSpawn;
-		
+	void ReplaceUnitClass(TSubclassOf<class AUSUnit> UnitClass);
+
+	FOnSpawnComplete OnSpawnComplete;
 };

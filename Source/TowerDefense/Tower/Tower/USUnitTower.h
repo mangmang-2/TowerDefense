@@ -18,6 +18,7 @@ public:
 	AUSUnitTower();
 	
 	virtual void BeginPlay() override;
+	virtual void Destroyed() override;
 	virtual void Tick(float DeltaTime) override;
 
 public:
@@ -30,6 +31,11 @@ public:
 	void ResponseMessage(struct FGameplayTag Channel, const struct FUSTowerWaypointUIMessage& Payload);
 	UFUNCTION()
 	void DeathActors(class AActor* Actor);
+
+	void ReplaceUnitClass(TSubclassOf<class AUSUnit> UnitClass);
+
+	UFUNCTION()
+	void SpawnComplete();
 public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UUSSpawner> UnitSpawner;

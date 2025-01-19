@@ -53,3 +53,27 @@ struct FUSTowerWaypointUIMessage
     UPROPERTY(BlueprintReadWrite)
     FVector Waypoint;
 };
+
+
+UENUM(BlueprintType)
+enum class EGameInfo : uint8
+{
+	Health			UMETA(DisplayName = "Health"),
+	Gold			UMETA(DisplayName = "Gold"),
+	MAX				UMETA(DisplayName = "None"),
+};
+
+USTRUCT(BlueprintType)
+struct FUSGameData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite)
+	FGameplayTag Verb;
+
+	UPROPERTY(EditAnywhere)
+	EGameInfo GameInfo;
+
+	UPROPERTY(EditAnywhere)
+	int32 Value;
+};
