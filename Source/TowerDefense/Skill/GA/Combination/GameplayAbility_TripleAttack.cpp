@@ -77,7 +77,7 @@ void UGameplayAbility_TripleAttack::LaunchProjectile(bool bLastAttack)
 {
 	if (TargetActor.IsValid())
 	{
-		UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, GetActorInfo().AvatarActor.Get(), TargetActor.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
+		UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, GetActorInfo().AvatarActor.Get()->GetActorLocation(), TargetActor.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
 		if (bLastAttack)
 		{
 			TrackingProjectileTask->OnCompleted.AddDynamic(this, &UGameplayAbility_TripleAttack::OnLastCompleteCallback);

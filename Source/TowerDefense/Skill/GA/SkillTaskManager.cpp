@@ -18,7 +18,7 @@ void USkillTaskManager::SetTaskList(TArray<FTask> Tasks)
     TaskList = Tasks;
 }
 
-void USkillTaskManager::CompleteTask(const AActor* OldTarget, const AActor* NewTarget)
+void USkillTaskManager::CompleteTask(const AActor* Target)
 {
     if (TaskList.IsEmpty())
         return;
@@ -31,28 +31,33 @@ void USkillTaskManager::CompleteTask(const AActor* OldTarget, const AActor* NewT
         UFunction* Function = GetOuter()->FindFunction(Task.CompletionFunctionName);
         if (Function)
         {
-            void* VoidPointer = const_cast<AActor*>(NewTarget);
+            void* VoidPointer = const_cast<AActor*>(Target);
 
             GetOuter()->ProcessEvent(Function, VoidPointer);
         }
     }
 
-    ExecuteTask(OldTarget, NewTarget);
+    ExecuteTask(Target);
 }
 
-void USkillTaskManager::ExecuteTask(const AActor* OldTarget, const AActor* NewTarget)
+void USkillTaskManager::ExecuteTask(const AActor* Target)
 {
 	if (TaskList.IsEmpty())
 		return;
 
-	FTask Task = TaskList[0];
+	FTask& Task = TaskList[0];
     FGameplayEventData PayloadData;
-    PayloadData.Target = NewTarget;
+    PayloadData.Target = Target;
     USkillOptionalData* SkillData = NewObject<USkillOptionalData>();
-    SkillData->OldTarget = OldTarget;
-    SkillData->SkillLocation = NewTarget->GetActorLocation();
+    SkillData->TargetSkillLocation = Target->GetActorLocation();
+    SkillData->LastTargetLocation = Task.LastTargetLocation; // 마지막 타겟의 위치 활용
     SkillData->OnSkillComplete.AddDynamic(this, &ThisClass::CompleteTask);
     PayloadData.OptionalObject = SkillData;
+
+    if (TaskList.Num() > 1 && TaskList[1].bLastTargetLocation == true)
+    {
+        TaskList[1].LastTargetLocation = Target->GetActorLocation();
+    }
 
     if (OwnerActor)
     {

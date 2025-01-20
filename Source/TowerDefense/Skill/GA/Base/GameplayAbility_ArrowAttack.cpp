@@ -9,7 +9,6 @@
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "../../Tag/USGameplayTag.h"
-#include "Abilities/GameplayAbility.h"
 
 
 UGameplayAbility_ArrowAttack::UGameplayAbility_ArrowAttack()
@@ -19,23 +18,26 @@ UGameplayAbility_ArrowAttack::UGameplayAbility_ArrowAttack()
 
 void UGameplayAbility_ArrowAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	AActor* OnwerActor = const_cast<AActor*>(TriggerEventData->Target.Get());
+	AActor* OnwerActor = const_cast<AActor*>(ActorInfo->AvatarActor.Get());
 	const USkillOptionalData* LoadData = Cast<const USkillOptionalData>(TriggerEventData->OptionalObject);
-	if (LoadData && LoadData->OldTarget)
+
+	FVector SpawnLocation = OnwerActor->GetActorLocation();
+	if (LoadData && LoadData->LastTargetLocation != FVector::ZeroVector)
 	{
-		OnwerActor = const_cast<AActor*>(LoadData->OldTarget);
+		SpawnLocation = LoadData->LastTargetLocation;
 	}
 
 	CopiedDelegate = LoadData->OnSkillComplete;
 
-	UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, OnwerActor, TriggerEventData->Target.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
+	UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, SpawnLocation, TriggerEventData->Target.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
 	TrackingProjectileTask->OnCompleted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnCompleteCallback);
 	TrackingProjectileTask->OnInterrupted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnInterruptedCallback);
 	
 	TrackingProjectileTask->ReadyForActivation();
 
-	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), ActionMontage, 1.0);
-	PlayAttackTask->ReadyForActivation();
+	//UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), ActionMontage, 1.0);
+	//PlayAttackTask->ReadyForActivation();
+
 }
 
 void UGameplayAbility_ArrowAttack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -56,7 +58,7 @@ void UGameplayAbility_ArrowAttack::OnCompleteCallback(const class AActor* Target
 		ASC->ApplyGameplayEffectSpecToTarget(*EffectSpec.Data.Get(), ASC);
 	}
 
-	CopiedDelegate.Broadcast(GetActorInfo().AvatarActor.Get(), Target);
+	CopiedDelegate.Broadcast(Target);
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 

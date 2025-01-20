@@ -8,7 +8,7 @@
 #include "SkillOptionalData.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillComplete, const AActor*, OldTarget, const AActor*, NewTarget);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkillComplete, const AActor*, Target);
 
 /**
  * 
@@ -19,7 +19,7 @@ class TOWERDEFENSE_API USkillOptionalData : public UObject
 	GENERATED_BODY()
 
 public:
-	const class AActor* OldTarget = nullptr;
-	FVector SkillLocation;
+	FVector LastTargetLocation;
+	FVector TargetSkillLocation;
 	FOnSkillComplete OnSkillComplete;
 };

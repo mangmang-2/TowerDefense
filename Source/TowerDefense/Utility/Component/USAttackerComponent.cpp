@@ -85,7 +85,7 @@ void UUSAttackerComponent::ActivateAbility(AActor* Target)
 	PayloadData.Target = Target;
 
 	USkillOptionalData* SkillData = NewObject<USkillOptionalData>();
-	SkillData->SkillLocation = Target->GetActorLocation();
+	SkillData->TargetSkillLocation = Target->GetActorLocation();
 	PayloadData.OptionalObject = SkillData;
 
 	for (const auto& AbilitySpec : StartGiveAbility)
@@ -93,7 +93,7 @@ void UUSAttackerComponent::ActivateAbility(AActor* Target)
 		for (int32 TagsIndex = 0 ; TagsIndex < AbilitySpec.Ability->AbilityTags.Num(); TagsIndex++)
 		{
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), AbilitySpec.Ability->AbilityTags.GetByIndex(TagsIndex), PayloadData);
-			OwnerRotation(Target);
+			//OwnerRotation(Target);
 		}
 	}
 }

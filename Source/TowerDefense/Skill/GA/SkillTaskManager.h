@@ -28,6 +28,11 @@ struct FTask
 
     UPROPERTY(EditAnywhere)
     FName CompletionFunctionName;
+
+    UPROPERTY(EditAnywhere)
+    bool bLastTargetLocation = false;
+
+    FVector LastTargetLocation = FVector::ZeroVector;
 };
 
 /**
@@ -48,8 +53,8 @@ public:
     void SetTaskList(TArray<FTask> Tasks);
 
     UFUNCTION()
-    void CompleteTask(const AActor* OldTarget, const AActor* NewTarget);
+    void CompleteTask(const AActor* Target);
 
     UFUNCTION()
-    void ExecuteTask(const AActor* OldTarget, const AActor* NewTarget);
+    void ExecuteTask(const AActor* Target);
 };

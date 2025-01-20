@@ -36,6 +36,6 @@ void UGameplayAbility_FindMonster::ActivateAbility(const FGameplayAbilitySpecHan
 
 
 	const USkillOptionalData* LoadData = Cast<const USkillOptionalData>(TriggerEventData->OptionalObject);
-	LoadData->OnSkillComplete.Broadcast(ActorInfo->AvatarActor.Get(), ClosestActor);
+	LoadData->OnSkillComplete.Broadcast(ClosestActor);
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

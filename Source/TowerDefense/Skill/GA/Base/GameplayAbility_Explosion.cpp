@@ -21,7 +21,7 @@ void UGameplayAbility_Explosion::ActivateAbility(const FGameplayAbilitySpecHandl
 	const USkillOptionalData* LoadData = Cast<const USkillOptionalData>(TriggerEventData->OptionalObject);
 	if (LoadData)
 	{
-		ExplosionLocation = LoadData->SkillLocation;
+		ExplosionLocation = LoadData->TargetSkillLocation;
 	}
 
     ExplosionEffect(ExplosionLocation);
@@ -29,7 +29,7 @@ void UGameplayAbility_Explosion::ActivateAbility(const FGameplayAbilitySpecHandl
     TArray<AActor*> TargetActors = FindActors(ExplosionLocation);
 	ApplyDamage(TargetActors);
 
-	LoadData->OnSkillComplete.Broadcast(GetActorInfo().AvatarActor.Get(), TriggerEventData->Target);
+	LoadData->OnSkillComplete.Broadcast(TriggerEventData->Target);
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 

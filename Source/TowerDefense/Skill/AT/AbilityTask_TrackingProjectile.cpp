@@ -10,10 +10,11 @@ UAbilityTask_TrackingProjectile::UAbilityTask_TrackingProjectile()
     bTickingTask = true;
 }
 
-UAbilityTask_TrackingProjectile* UAbilityTask_TrackingProjectile::CreateTask(UGameplayAbility* OwningAbility, class AActor* OwnerActor, const class AActor* Target, TSubclassOf<AActor> InProjectileClass, float InitialSpeed, float HomingAccelerationMagnitude)
+UAbilityTask_TrackingProjectile* UAbilityTask_TrackingProjectile::CreateTask(UGameplayAbility* OwningAbility, FVector SpawnLocation, const class AActor* Target, TSubclassOf<AActor> InProjectileClass, float InitialSpeed, float HomingAccelerationMagnitude)
 {
     UAbilityTask_TrackingProjectile* MyObj = NewAbilityTask<UAbilityTask_TrackingProjectile>(OwningAbility);
-    MyObj->OwnerActor = OwnerActor;
+    MyObj->OwnerActor = OwningAbility->GetActorInfo().AvatarActor;
+    MyObj->ActorLocation = SpawnLocation;
     MyObj->TargetActor = Target;
     MyObj->InitialSpeed = InitialSpeed;
     MyObj->HomingAccelerationMagnitude = HomingAccelerationMagnitude;
@@ -30,8 +31,8 @@ void UAbilityTask_TrackingProjectile::Activate()
     FActorSpawnParameters SpawnParams;
     SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-    ActorLocation = OwnerActor->GetActorLocation() + OwnerActor->GetActorUpVector() * 50 + OwnerActor->GetActorForwardVector() * 50;
-    ActorRotation = OwnerActor->GetActorRotation();
+    //ActorLocation = OwnerActor->GetActorLocation() + OwnerActor->GetActorUpVector() * 50 + OwnerActor->GetActorForwardVector() * 50;
+    //ActorRotation = OwnerActor->GetActorRotation();
 
     AUSBullet* SpawnedBullet = GetWorld()->SpawnActor<AUSBullet>(
         ProjectileClass,

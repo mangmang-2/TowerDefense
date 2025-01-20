@@ -23,7 +23,7 @@ void UGameplayAbility_ExplosionArrow::ActivateAbility(const FGameplayAbilitySpec
     }
 	SkillTaskManager->SetOwnerActor(ActorInfo->AvatarActor.Get());
     SkillTaskManager->SetTaskList(TaskList);
-    SkillTaskManager->ExecuteTask(ActorInfo->AvatarActor.Get(), TriggerEventData->Target);
+    SkillTaskManager->ExecuteTask(TriggerEventData->Target);
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
