@@ -54,9 +54,16 @@ void USkillTaskManager::ExecuteTask(const AActor* Target)
     SkillData->OnSkillComplete.AddDynamic(this, &ThisClass::CompleteTask);
     PayloadData.OptionalObject = SkillData;
 
-    if (TaskList.Num() > 1 && TaskList[1].bLastTargetLocation == true)
+    if (TaskList.Num() > 1)
     {
-        TaskList[1].LastTargetLocation = Target->GetActorLocation();
+        if(TaskList[1].bLastTargetLocation == true)
+        {
+            TaskList[1].LastTargetLocation = Target->GetActorLocation();
+        }
+        else
+        {
+            TaskList[1].LastTargetLocation = OwnerActor->GetActorLocation();
+        }
     }
 
     if (OwnerActor)
