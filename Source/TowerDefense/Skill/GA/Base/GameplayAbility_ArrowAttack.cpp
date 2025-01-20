@@ -18,6 +18,7 @@ UGameplayAbility_ArrowAttack::UGameplayAbility_ArrowAttack()
 
 void UGameplayAbility_ArrowAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	AActor* OnwerActor = const_cast<AActor*>(ActorInfo->AvatarActor.Get());
 	const USkillOptionalData* LoadData = Cast<const USkillOptionalData>(TriggerEventData->OptionalObject);
 
@@ -26,8 +27,6 @@ void UGameplayAbility_ArrowAttack::ActivateAbility(const FGameplayAbilitySpecHan
 	{
 		SpawnLocation = LoadData->LastTargetLocation;
 	}
-
-	CopiedDelegate = LoadData->OnSkillComplete;
 
 	UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, SpawnLocation, TriggerEventData->Target.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
 	TrackingProjectileTask->OnCompleted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnCompleteCallback);
@@ -58,7 +57,7 @@ void UGameplayAbility_ArrowAttack::OnCompleteCallback(const class AActor* Target
 		ASC->ApplyGameplayEffectSpecToTarget(*EffectSpec.Data.Get(), ASC);
 	}
 
-	CopiedDelegate.Broadcast(Target);
+	TargetActor = const_cast<AActor*>(Target);
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 

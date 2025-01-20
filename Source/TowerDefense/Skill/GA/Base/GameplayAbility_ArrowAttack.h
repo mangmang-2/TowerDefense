@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "../../../Utility/MessageSystem/MesssageStruct/SkillOptionalData.h"
+#include "GameplayAbility_Base.h"
 #include "GameplayAbility_ArrowAttack.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TOWERDEFENSE_API UGameplayAbility_ArrowAttack : public UGameplayAbility
+class TOWERDEFENSE_API UGameplayAbility_ArrowAttack : public UGameplayAbility_Base
 {
 	GENERATED_BODY()
 
@@ -44,6 +44,4 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float AttackDamage = 20.0f;
-
-	FOnSkillComplete CopiedDelegate;
 };

@@ -12,9 +12,10 @@ UGameplayAbility_PullMonsters::UGameplayAbility_PullMonsters()
 
 void UGameplayAbility_PullMonsters::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
 	const USkillOptionalData* LoadData = Cast<const USkillOptionalData>(TriggerEventData->OptionalObject);
 
-	CopiedDelegate = LoadData->OnSkillComplete;
 	TargetActor = const_cast<AActor*>(TriggerEventData->Target.Get());
 
 	FVector SkillCenter = TargetActor->GetActorLocation();
@@ -110,7 +111,6 @@ void UGameplayAbility_PullMonsters::CheckAllMonstersFinished()
 
 	if (bAllFinished)
 	{
-		CopiedDelegate.Broadcast(TargetActor);
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
 }

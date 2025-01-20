@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "../../../Utility/MessageSystem/MesssageStruct/SkillOptionalData.h"
+#include "GameplayAbility_Base.h"
 #include "GameplayAbility_PullMonsters.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TOWERDEFENSE_API UGameplayAbility_PullMonsters : public UGameplayAbility
+class TOWERDEFENSE_API UGameplayAbility_PullMonsters : public UGameplayAbility_Base
 {
 	GENERATED_BODY()
 
@@ -26,8 +26,6 @@ public:
 protected:
 	TMap<class AActor*, bool> MovingMonsters;
 	TMap<class AActor*, float> MonsterElapsedTime;
-	FOnSkillComplete CopiedDelegate;
-	class AActor* TargetActor= nullptr;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UCurveFloat> MovementCurve;

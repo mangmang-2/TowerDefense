@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "GameplayAbility_Base.h"
 #include "GameplayAbility_FindMonster.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TOWERDEFENSE_API UGameplayAbility_FindMonster : public UGameplayAbility
+class TOWERDEFENSE_API UGameplayAbility_FindMonster : public UGameplayAbility_Base
 {
 	GENERATED_BODY()
 	

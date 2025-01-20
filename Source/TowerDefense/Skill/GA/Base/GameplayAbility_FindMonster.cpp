@@ -12,6 +12,7 @@ UGameplayAbility_FindMonster::UGameplayAbility_FindMonster()
 
 void UGameplayAbility_FindMonster::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	const AActor* ClosestActor = TriggerEventData->Target;
 
 	TArray<AActor*> FoundActors;
@@ -34,8 +35,6 @@ void UGameplayAbility_FindMonster::ActivateAbility(const FGameplayAbilitySpecHan
 		}
 	}
 
-
-	const USkillOptionalData* LoadData = Cast<const USkillOptionalData>(TriggerEventData->OptionalObject);
-	LoadData->OnSkillComplete.Broadcast(ClosestActor);
+	TargetActor = const_cast<AActor*>(ClosestActor);
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

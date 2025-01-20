@@ -17,6 +17,8 @@ UGameplayAbility_Explosion::UGameplayAbility_Explosion()
 
 void UGameplayAbility_Explosion::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
 	FVector ExplosionLocation = FVector::ZeroVector;
 	const USkillOptionalData* LoadData = Cast<const USkillOptionalData>(TriggerEventData->OptionalObject);
 	if (LoadData)
@@ -29,7 +31,8 @@ void UGameplayAbility_Explosion::ActivateAbility(const FGameplayAbilitySpecHandl
     TArray<AActor*> TargetActors = FindActors(ExplosionLocation);
 	ApplyDamage(TargetActors);
 
-	LoadData->OnSkillComplete.Broadcast(TriggerEventData->Target);
+	TargetActor = const_cast<AActor*>(TriggerEventData->Target.Get());
+
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
