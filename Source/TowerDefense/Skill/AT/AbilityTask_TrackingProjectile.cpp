@@ -10,10 +10,10 @@ UAbilityTask_TrackingProjectile::UAbilityTask_TrackingProjectile()
     bTickingTask = true;
 }
 
-UAbilityTask_TrackingProjectile* UAbilityTask_TrackingProjectile::CreateTask(UGameplayAbility* OwningAbility, const class AActor* Target, TSubclassOf<AActor> InProjectileClass, float InitialSpeed, float HomingAccelerationMagnitude)
+UAbilityTask_TrackingProjectile* UAbilityTask_TrackingProjectile::CreateTask(UGameplayAbility* OwningAbility, class AActor* OwnerActor, const class AActor* Target, TSubclassOf<AActor> InProjectileClass, float InitialSpeed, float HomingAccelerationMagnitude)
 {
     UAbilityTask_TrackingProjectile* MyObj = NewAbilityTask<UAbilityTask_TrackingProjectile>(OwningAbility);
-    MyObj->OwnerActor = OwningAbility->GetActorInfo().AvatarActor;
+    MyObj->OwnerActor = OwnerActor;
     MyObj->TargetActor = Target;
     MyObj->InitialSpeed = InitialSpeed;
     MyObj->HomingAccelerationMagnitude = HomingAccelerationMagnitude;

@@ -1,15 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Skill/GA/GameplayAbility_TripleAttack.h"
-#include "../AT/AbilityTask_TrackingProjectile.h"
+#include "Skill/GA/Combination/GameplayAbility_TripleAttack.h"
+#include "../../AT/AbilityTask_TrackingProjectile.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
-#include "../Tag/USGameplayTag.h"
+#include "../../Tag/USGameplayTag.h"
+#include "Abilities/GameplayAbility.h"
 
 
 UGameplayAbility_TripleAttack::UGameplayAbility_TripleAttack()
@@ -76,7 +77,7 @@ void UGameplayAbility_TripleAttack::LaunchProjectile(bool bLastAttack)
 {
 	if (TargetActor.IsValid())
 	{
-		UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, TargetActor.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
+		UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, GetActorInfo().AvatarActor.Get(), TargetActor.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
 		if (bLastAttack)
 		{
 			TrackingProjectileTask->OnCompleted.AddDynamic(this, &UGameplayAbility_TripleAttack::OnLastCompleteCallback);

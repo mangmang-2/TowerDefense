@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Skill/GA/GameplayAbility_BackTeleport.h"
-#include "../../Unit/USUnit.h"
+#include "Skill/GA/Base/GameplayAbility_BackTeleport.h"
+#include "../../../Unit/USUnit.h"
 #include "AIController.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"

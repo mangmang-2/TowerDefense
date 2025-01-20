@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Skill/GA/GameplayAbility_SimpleAttack.h"
+#include "Skill/GA/Base/GameplayAbility_SimpleAttack.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "../Tag/USGameplayTag.h"
+#include "../../Tag/USGameplayTag.h"
 
 UGameplayAbility_SimpleAttack::UGameplayAbility_SimpleAttack()
 {

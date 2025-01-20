@@ -11,6 +11,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "GameplayAbilitySpec.h"
 #include "GameplayTagContainer.h"
+#include "../../Utility/MessageSystem/MesssageStruct/SkillOptionalData.h"
 
 // Sets default values for this component's properties
 UUSAttackerComponent::UUSAttackerComponent()
@@ -19,7 +20,7 @@ UUSAttackerComponent::UUSAttackerComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	PrimaryComponentTick.TickInterval = 1.0f;
+	PrimaryComponentTick.TickInterval = 10.0f;
 
 }
 
@@ -49,6 +50,8 @@ void UUSAttackerComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 void UUSAttackerComponent::SetAbilitySystemComponent(UAbilitySystemComponent* AbilitySystemComponent)
 {
 	ASC = AbilitySystemComponent;
+
+	StartGiveAbility = ASC->GetActivatableAbilities();
 }
 
 AActor* UUSAttackerComponent::FindClosestMonster()
@@ -80,7 +83,12 @@ void UUSAttackerComponent::ActivateAbility(AActor* Target)
 
 	FGameplayEventData PayloadData;
 	PayloadData.Target = Target;
-	for (const auto& AbilitySpec : ASC->GetActivatableAbilities())
+
+	USkillOptionalData* SkillData = NewObject<USkillOptionalData>();
+	SkillData->SkillLocation = Target->GetActorLocation();
+	PayloadData.OptionalObject = SkillData;
+
+	for (const auto& AbilitySpec : StartGiveAbility)
 	{
 		for (int32 TagsIndex = 0 ; TagsIndex < AbilitySpec.Ability->AbilityTags.Num(); TagsIndex++)
 		{

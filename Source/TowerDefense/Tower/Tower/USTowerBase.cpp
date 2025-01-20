@@ -50,7 +50,12 @@ void AUSTowerBase::BeginPlay()
 	}
 
 	AttackerComponent->SetAbilitySystemComponent(ASC);
-
+	
+	for (const auto& Ability : TowerAbilities)
+	{
+		FGameplayAbilitySpec Spec(Ability);
+		ASC->GiveAbility(Spec);
+	}
 
 	UDataTable* TowerTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/TowerDefance/DataTable/TowerData.TowerData"));
 	if (TowerTable == nullptr)

@@ -8,7 +8,7 @@
 void UUSStageSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
-	NextStage();
+	//NextStage();
 }
 
 void UUSStageSubsystem::LoadStage(const FName& StageName)

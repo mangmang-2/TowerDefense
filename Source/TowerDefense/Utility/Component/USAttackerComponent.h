@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayAbilitySpec.h"
 #include "USAttackerComponent.generated.h"
 
 
@@ -35,4 +36,6 @@ protected:
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
 	float AttackRange = 10000;
+
+	TArray<struct FGameplayAbilitySpec> StartGiveAbility;
 };

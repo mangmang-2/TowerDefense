@@ -1,14 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Skill/GA/GameplayAbility_ArrowAttack.h"
-#include "../AT/AbilityTask_TrackingProjectile.h"
+#include "Skill/GA/Base/GameplayAbility_ArrowAttack.h"
+#include "../../AT/AbilityTask_TrackingProjectile.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
-#include "../Tag/USGameplayTag.h"
+#include "../../Tag/USGameplayTag.h"
+#include "Abilities/GameplayAbility.h"
 
 
 UGameplayAbility_ArrowAttack::UGameplayAbility_ArrowAttack()
@@ -18,7 +19,16 @@ UGameplayAbility_ArrowAttack::UGameplayAbility_ArrowAttack()
 
 void UGameplayAbility_ArrowAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, TriggerEventData->Target.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
+	AActor* OnwerActor = const_cast<AActor*>(TriggerEventData->Target.Get());
+	const USkillOptionalData* LoadData = Cast<const USkillOptionalData>(TriggerEventData->OptionalObject);
+	if (LoadData && LoadData->OldTarget)
+	{
+		OnwerActor = const_cast<AActor*>(LoadData->OldTarget);
+	}
+
+	CopiedDelegate = LoadData->OnSkillComplete;
+
+	UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, OnwerActor, TriggerEventData->Target.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
 	TrackingProjectileTask->OnCompleted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnCompleteCallback);
 	TrackingProjectileTask->OnInterrupted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnInterruptedCallback);
 	
@@ -46,6 +56,7 @@ void UGameplayAbility_ArrowAttack::OnCompleteCallback(const class AActor* Target
 		ASC->ApplyGameplayEffectSpecToTarget(*EffectSpec.Data.Get(), ASC);
 	}
 
+	CopiedDelegate.Broadcast(GetActorInfo().AvatarActor.Get(), Target);
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 

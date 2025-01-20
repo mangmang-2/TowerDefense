@@ -31,6 +31,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<class UGameplayAbility>> Abilities;
+
 	UPROPERTY()
 	TObjectPtr<class UUSTowerStatAttributeSet> AttributeSet;
 
@@ -53,4 +54,8 @@ protected:
 
 	float Health = 100;
 	
+	UPROPERTY(EditAnywhere)
+	bool AttackAble = true;
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<class UGameplayAbility>> TowerAbilities;
 };
