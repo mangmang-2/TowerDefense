@@ -44,21 +44,24 @@ void USkillTaskManager::ExecuteTask(const AActor* Target)
 {
 	if (TaskList.IsEmpty())
 		return;
+    if(GetOuter() == nullptr)
+        return;
 
 	FTask& Task = TaskList[0];
     FGameplayEventData PayloadData;
     PayloadData.Target = Target;
     USkillOptionalData* SkillData = NewObject<USkillOptionalData>();
-    SkillData->TargetSkillLocation = Target->GetActorLocation();
+    SkillData->TargetSkillLocation = Target == nullptr ? FVector::ZeroVector : Target->GetActorLocation();
     SkillData->LastTargetLocation = Task.LastTargetLocation; // 마지막 타겟의 위치 활용
     SkillData->OnSkillComplete.AddDynamic(this, &ThisClass::CompleteTask);
     PayloadData.OptionalObject = SkillData;
+
 
     if (TaskList.Num() > 1)
     {
         if(TaskList[1].bLastTargetLocation == true)
         {
-            TaskList[1].LastTargetLocation = Target->GetActorLocation();
+            TaskList[1].LastTargetLocation = Target == nullptr ? FVector::ZeroVector : Target->GetActorLocation();
         }
         else
         {

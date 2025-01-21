@@ -24,8 +24,6 @@ void UGameplayAbility_ExplosionArrow::ActivateAbility(const FGameplayAbilitySpec
 	SkillTaskManager->SetOwnerActor(ActorInfo->AvatarActor.Get());
     SkillTaskManager->SetTaskList(TaskList);
     SkillTaskManager->ExecuteTask(TriggerEventData->Target);
-
-    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void UGameplayAbility_ExplosionArrow::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -35,5 +33,6 @@ void UGameplayAbility_ExplosionArrow::EndAbility(const FGameplayAbilitySpecHandl
 
 void UGameplayAbility_ExplosionArrow::OnExplosionComplete(const AActor* Target)
 {
+    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 

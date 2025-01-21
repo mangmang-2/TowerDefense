@@ -27,6 +27,8 @@ void UGameplayAbility_ArrowAttack::ActivateAbility(const FGameplayAbilitySpecHan
 	{
 		SpawnLocation = LoadData->LastTargetLocation;
 	}
+	if(TriggerEventData->Target == nullptr)
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 
 	UAbilityTask_TrackingProjectile* TrackingProjectileTask = UAbilityTask_TrackingProjectile::CreateTask(this, SpawnLocation, TriggerEventData->Target.Get(), ProjectileClass, InitialSpeed, HomingAccelerationMagnitude);
 	TrackingProjectileTask->OnCompleted.AddDynamic(this, &UGameplayAbility_ArrowAttack::OnCompleteCallback);

@@ -14,6 +14,10 @@ void UGameplayAbility_FindMonster::ActivateAbility(const FGameplayAbilitySpecHan
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	const AActor* ClosestActor = TriggerEventData->Target;
+	if (ClosestActor == nullptr)
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
 
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("Monster"), FoundActors);
