@@ -53,5 +53,9 @@ void UUSTowerStatAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 		SetDamage(0.0f);
 	}
 
-	//OnHealthChange.Broadcast();
+	GetWorld()->GetTimerManager().SetTimerForNextTick([&]()
+		{
+			OnHealthChange.Broadcast();
+		});
+	
 }

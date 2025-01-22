@@ -34,4 +34,15 @@ public:
 
 	bool IsLastStage();
 	bool IsLastWave(int32 Wave);
+
+
+protected:
+	class AUSWaveManagerActor* WaveManagerActor = nullptr;
+
+public:
+	void SetWaveManagerActor(class AUSWaveManagerActor* WaveActor);
+	int32 GetRemainGold();
+	void ConsumeGold(int32 GoldValue);
+
+	void ConsumeHealthPoint();
 };

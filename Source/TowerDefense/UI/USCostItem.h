@@ -32,6 +32,10 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTextBlock> TextBlock_Cost;
 
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UButton> Button_Slot;
+
 	FUSTowerUpgradeData TowerUpgradeData;
 	AActor* OwnerActor = nullptr;
 };

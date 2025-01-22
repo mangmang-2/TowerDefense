@@ -7,6 +7,8 @@
 #include "../Utility/MessageSystem/MesssageStruct/USTowerMessage.h"
 #include "NativeGameplayTags.h"
 #include "../Utility/MessageSystem/GameplayMessageSubsystem.h"
+#include "Components/Button.h"
+#include "../Utility/DataTable/USStageSubsystem.h"
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_TowerBuild_Message);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_SelectUI_Message);
@@ -24,6 +26,20 @@ void UUSCostItem::SetData(FUSTowerUpgradeData UpgradeData)
 {
 	TowerUpgradeData = UpgradeData;
 	SetData(UpgradeData.UIIcon, UpgradeData.UpgradeCost);
+
+	UUSStageSubsystem* TowerUpgradeSubSystem = GetGameInstance()->GetSubsystem<UUSStageSubsystem>();
+	if (Button_Slot && TowerUpgradeSubSystem)
+	{
+		if(TowerUpgradeSubSystem->GetRemainGold() < UpgradeData.UpgradeCost)
+		{
+			Button_Slot->SetIsEnabled(false);
+
+			FLinearColor DisabledColor = FLinearColor::Gray;
+			Button_Slot->WidgetStyle.Normal.TintColor = FSlateColor(DisabledColor);
+			Button_Slot->WidgetStyle.Hovered.TintColor = FSlateColor(DisabledColor);
+			Button_Slot->WidgetStyle.Pressed.TintColor = FSlateColor(DisabledColor);
+		}
+	}
 }
 
 void UUSCostItem::SetActor(AActor* SelectedActor)
@@ -46,6 +62,12 @@ void UUSCostItem::CreateTower()
 
 	UGameplayMessageSubsystem& MessageSystem = UGameplayMessageSubsystem::Get(GetWorld());
 	MessageSystem.BroadcastMessage(Message.Verb, Message);
+
+	UUSStageSubsystem* TowerUpgradeSubSystem = GetGameInstance()->GetSubsystem<UUSStageSubsystem>();
+	if (TowerUpgradeSubSystem)
+	{
+		TowerUpgradeSubSystem->ConsumeGold(TowerUpgradeData.UpgradeCost);
+	}
 }
 
 void UUSCostItem::DestroyUI()

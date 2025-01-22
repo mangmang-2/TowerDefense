@@ -46,6 +46,8 @@ void USkillTaskManager::ExecuteTask(const AActor* Target)
 		return;
     if(GetOuter() == nullptr)
         return;
+    if(Target == nullptr)
+        return;
 
 	FTask& Task = TaskList[0];
     FGameplayEventData PayloadData;

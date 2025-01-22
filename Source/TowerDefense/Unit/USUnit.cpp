@@ -113,7 +113,7 @@ void AUSUnit::RecordPath()
 
 	for (int32 i = 0; i < PathHistory.Num() - 1; ++i)
 	{
-		DrawDebugLine(GetWorld(), PathHistory[i], PathHistory[i + 1], FColor::Green, false, 2.0f, 0, 2.0f);
+		//DrawDebugLine(GetWorld(), PathHistory[i], PathHistory[i + 1], FColor::Green, false, 2.0f, 0, 2.0f);
 	}
 }
 

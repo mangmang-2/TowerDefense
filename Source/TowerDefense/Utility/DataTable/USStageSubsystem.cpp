@@ -4,11 +4,12 @@
 #include "Utility/DataTable/USStageSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "USStageSubsystem.h"
+#include "../../GamePlay/USWaveManagerActor.h"
 
 void UUSStageSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
-	//NextStage();
+	NextStage();
 }
 
 void UUSStageSubsystem::LoadStage(const FName& StageName)
@@ -94,4 +95,32 @@ bool UUSStageSubsystem::IsLastStage()
 bool UUSStageSubsystem::IsLastWave(int32 Wave)
 {
 	return GetWaveData(CurrentStage, Wave + 1).IsEmpty();
+}
+
+void UUSStageSubsystem::SetWaveManagerActor(AUSWaveManagerActor* WaveActor)
+{
+	WaveManagerActor = WaveActor;
+}
+
+int32 UUSStageSubsystem::GetRemainGold()
+{
+	if(WaveManagerActor == nullptr)
+		return 0;
+	return WaveManagerActor->GetCurrentGold();
+}
+
+void UUSStageSubsystem::ConsumeGold(int32 GoldValue)
+{
+	if (WaveManagerActor)
+	{
+		WaveManagerActor->DescreaseGold(GoldValue);
+	}
+}
+
+void UUSStageSubsystem::ConsumeHealthPoint()
+{
+	if (WaveManagerActor)
+	{
+		WaveManagerActor->DescreaseHeathPoint();
+	}
 }

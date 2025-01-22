@@ -31,6 +31,9 @@ protected:
 	int32 CurrentHealth = 10;
 	int32 CurrentGold = 0;
 
+public:
+	int32 GetCurrentGold() { return CurrentGold; }
+
 protected:
 	void NextWave();
 	void SpawnMonsterTower(int32 Wave);
@@ -48,7 +51,7 @@ protected:
 	UFUNCTION()
 	void SendRemainTime();
 
-protected:
+public:
 	void IncreaseGold();
 	void SetHeathPoint();
 	void DescreaseHeathPoint(); // 몬스터마다 생명력이 다르면 모르겠지만..일단 1개씩제거

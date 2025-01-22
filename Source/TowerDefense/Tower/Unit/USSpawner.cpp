@@ -24,7 +24,7 @@ void UUSSpawner::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &UUSSpawner::SpawnActors, SpawnInterval, true, 1.0f);
+    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &UUSSpawner::SpawnActors, SpawnInterval, true, 5.0f);
 
 }
 

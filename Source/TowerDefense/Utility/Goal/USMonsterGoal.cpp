@@ -3,6 +3,7 @@
 
 #include "Utility/Goal/USMonsterGoal.h"
 #include "Components/BoxComponent.h"
+#include "../DataTable/USStageSubsystem.h"
 
 // Sets default values
 AUSMonsterGoal::AUSMonsterGoal()
@@ -36,6 +37,12 @@ void AUSMonsterGoal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AA
 	if (OtherActor && OtherActor != this && OtherActor->Tags.Contains(TEXT("Monster")))
 	{
 		OtherActor->Destroy();
+	}
+
+	UUSStageSubsystem* TowerUpgradeSubSystem = GetGameInstance()->GetSubsystem<UUSStageSubsystem>();
+	if (TowerUpgradeSubSystem)
+	{
+		TowerUpgradeSubSystem->ConsumeHealthPoint();
 	}
 }
 

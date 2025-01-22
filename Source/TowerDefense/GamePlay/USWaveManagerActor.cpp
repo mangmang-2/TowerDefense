@@ -36,6 +36,11 @@ void AUSWaveManagerActor::BeginPlay()
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
 	MessageSubsystem.RegisterListener(TAG_Message_UI_HUDInfo, this, &ThisClass::ResponseMessage);
+
+	UUSStageSubsystem* TowerUpgradeSubSystem = GetGameInstance()->GetSubsystem<UUSStageSubsystem>();
+	if (TowerUpgradeSubSystem == nullptr)
+		return;
+	TowerUpgradeSubSystem->SetWaveManagerActor(this);
 }
 
 // Called every frame
@@ -191,6 +196,8 @@ void AUSWaveManagerActor::IncreaseGold()
 
 	FUSStageData StageData = TowerUpgradeSubSystem->GetCurrentStageData();
 	CurrentGold += StageData.Gold;
+
+	SendInfo();
 }
 
 void AUSWaveManagerActor::SetHeathPoint()
@@ -201,16 +208,20 @@ void AUSWaveManagerActor::SetHeathPoint()
 
 	FUSStageData StageData = TowerUpgradeSubSystem->GetCurrentStageData();
 	CurrentHealth = StageData.Health;
+
+	SendInfo();
 }
 
 void AUSWaveManagerActor::DescreaseHeathPoint()
 {
 	CurrentHealth--;
+	SendInfo();
 }
 
 void AUSWaveManagerActor::DescreaseGold(int32 Value)
 {
 	CurrentGold -= Value;
+	SendInfo();
 }
 
 void AUSWaveManagerActor::ResponseMessage(FGameplayTag Channel, const FUSGameData& Payload)
