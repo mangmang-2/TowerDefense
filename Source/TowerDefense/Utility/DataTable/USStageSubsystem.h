@@ -44,5 +44,4 @@ public:
 	int32 GetRemainGold();
 	void ConsumeGold(int32 GoldValue);
 
-	void ConsumeHealthPoint();
 };

@@ -4,6 +4,11 @@
 #include "Utility/Goal/USMonsterGoal.h"
 #include "Components/BoxComponent.h"
 #include "../DataTable/USStageSubsystem.h"
+#include "NativeGameplayTags.h"
+#include "../MessageSystem/GameplayMessageSubsystem.h"
+#include "../MessageSystem/MesssageStruct/USTowerMessage.h"
+
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Message_Game_Info)
 
 // Sets default values
 AUSMonsterGoal::AUSMonsterGoal()
@@ -39,10 +44,11 @@ void AUSMonsterGoal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AA
 		OtherActor->Destroy();
 	}
 
-	UUSStageSubsystem* TowerUpgradeSubSystem = GetGameInstance()->GetSubsystem<UUSStageSubsystem>();
-	if (TowerUpgradeSubSystem)
-	{
-		TowerUpgradeSubSystem->ConsumeHealthPoint();
-	}
+	FUSGameData Message;
+	Message.Verb = TAG_Message_Game_Info;
+	Message.GameInfo = EGameInfo::Health;
+
+	UGameplayMessageSubsystem& MessageSystem = UGameplayMessageSubsystem::Get(GetWorld());
+	MessageSystem.BroadcastMessage(Message.Verb, Message);
 }
 

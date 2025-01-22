@@ -116,11 +116,3 @@ void UUSStageSubsystem::ConsumeGold(int32 GoldValue)
 		WaveManagerActor->DescreaseGold(GoldValue);
 	}
 }
-
-void UUSStageSubsystem::ConsumeHealthPoint()
-{
-	if (WaveManagerActor)
-	{
-		WaveManagerActor->DescreaseHeathPoint();
-	}
-}

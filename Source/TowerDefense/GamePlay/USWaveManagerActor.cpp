@@ -11,6 +11,7 @@
 #include "NativeGameplayTags.h"
 #include "../Utility/DataTable/USTowerUIData.h"
 #include "../Utility/MessageSystem/MesssageStruct/USTowerMessage.h"
+#include "../UI/USGameEnd.h"
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Message_UI_HUDInfo)
 UE_DEFINE_GAMEPLAY_TAG(TAG_Message_Game_Info, "Message.Game.Info")
@@ -28,6 +29,9 @@ void AUSWaveManagerActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (RTDraw)
+		UKismetRenderingLibrary::ClearRenderTarget2D(this, RTDraw);
+
 	SetHeathPoint();
 	NextWave();
 
@@ -35,7 +39,7 @@ void AUSWaveManagerActor::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &ThisClass::StartRemainTimer);
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
-	MessageSubsystem.RegisterListener(TAG_Message_UI_HUDInfo, this, &ThisClass::ResponseMessage);
+	MessageSubsystem.RegisterListener(TAG_Message_Game_Info, this, &ThisClass::ResponseMessage);
 
 	UUSStageSubsystem* TowerUpgradeSubSystem = GetGameInstance()->GetSubsystem<UUSStageSubsystem>();
 	if (TowerUpgradeSubSystem == nullptr)
@@ -68,12 +72,10 @@ void AUSWaveManagerActor::NextWave()
 
 	if (TowerUpgradeSubSystem->IsLastWave(CurrentWave))
 	{
-		if (RTDraw)
-			UKismetRenderingLibrary::ClearRenderTarget2D(this, RTDraw);
-
 		if (TowerUpgradeSubSystem->IsLastStage())
 		{
 			// 종료 메세지
+			ShowGameEndWidget(true);
 		}
 		else
 		{
@@ -216,6 +218,9 @@ void AUSWaveManagerActor::DescreaseHeathPoint()
 {
 	CurrentHealth--;
 	SendInfo();
+
+	if(CurrentHealth <= 0)
+		ShowGameEndWidget(false);
 }
 
 void AUSWaveManagerActor::DescreaseGold(int32 Value)
@@ -234,4 +239,14 @@ void AUSWaveManagerActor::ResponseMessage(FGameplayTag Channel, const FUSGameDat
 	{
 		DescreaseHeathPoint();
 	}
+}
+
+void AUSWaveManagerActor::ShowGameEndWidget(bool bVictory)
+{
+	UUSGameEnd* GameEnd = CreateWidget<UUSGameEnd>(GetWorld(), GameEndClass, TEXT("GameEnd"));
+	if (GameEnd == nullptr)
+		return;
+
+	GameEnd->AddToViewport();
+	GameEnd->SetText(bVictory);
 }

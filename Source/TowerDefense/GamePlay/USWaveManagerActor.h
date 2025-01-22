@@ -58,4 +58,10 @@ public:
 	void DescreaseGold(int32 Value);
 
 	virtual void ResponseMessage(struct FGameplayTag Channel, const struct FUSGameData& Payload);
+
+protected:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUSGameEnd> GameEndClass;
+
+	void ShowGameEndWidget(bool bVictory);
 };
